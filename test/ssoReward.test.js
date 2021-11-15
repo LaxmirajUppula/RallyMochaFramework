@@ -15,6 +15,7 @@ const path = require("path");
 // const ssoObjectJson = require("../testdata/ssoInternalLinks.json");
 // const ssoMapingObjectJson = require("../testdata/ssoMapping.json");
 let ActivityName = [];
+let subActivitiesId = [];
 let RewardActivityID;
 let CTAValue;
 let CTA;
@@ -167,7 +168,6 @@ describe("Implementation", () => {
 
                     CTA = action.doGetText($(rofPage.CTA));
 
-
                     expect($(rofPage.RewardActivityID)).toExist();
                     RewardActivityID = action.doGetText(
                       $(rofPage.RewardActivityID)
@@ -176,9 +176,54 @@ describe("Implementation", () => {
                     expect($(rofPage.CTAValue)).toExist();
                     CTAValue = action.doGetText($(rofPage.CTAValue));
 
+                    // ***********************************************************Standard Sub-Activity IDS******************************************
+                    browser.setTimeout({ implicit: 2000 });
+                    let noSubActivities = $(
+                      ".listRelatedObject .noRowsHeader"
+                    ).isExisting();
+                    console.log("Sub-Activities status: " + noSubActivities);
+                    if (noSubActivities) {
+                      console.log("No Sub-Activities present in it");
+                    } else {
+                      console.log("Sub-Activities available for this activity");
+                      var Activitiesurl = browser.getUrl();
+                      var subActivitiesBody =
+                        Activitiesurl.split("/").pop() +
+                        "_00N44000006azw2_body";
+                      console.log(subActivitiesBody);
+                      var subActivities = $$(
+                        "#" + subActivitiesBody + " th:nth-child(2)"
+                      );
+                      if (subActivities.length > 5) {
+                        action.doClick($("a*=Go to list"));
+                        browser.setTimeout({ implicit: 5000 });
+                        var subActivities = $$(
+                          ".bPageBlock.brandSecondaryBrd.secondaryPalette th:nth-child(2)"
+                        );
+                        var sb_xpath =
+                          "//div[@class='bPageBlock brandSecondaryBrd secondaryPalette']  //tr[";
+                        var sa_xpath = "]/td[2]/a";
+                      } else {
+                        var sb_xpath =
+                          '//*[@id="' +
+                          subActivitiesBody +
+                          '"]/table/tbody/tr[';
+                        var sa_xpath = "]/td[2]/a";
+                      }
+                      for (let k = 2; k <= subActivities.length; k++) {
+                        const StandardActivityid = action.doGetText(
+                          $(sb_xpath + k + sa_xpath)
+                        );
+
+                        subActivitiesId.push(StandardActivityid);
+                      }
+                      console.log(subActivitiesId);
+                      browser.back();
+                    }
+
                     console.log(
                       "If Reward activity id present in custom Activity returns true status : " +
-                      ActivityName.includes(RewardActivityID)
+                        ActivityName.includes(RewardActivityID)
                     );
 
                     // *******************************************************Validating the custom reward Activity id match & capturing values**********************************
@@ -226,7 +271,9 @@ describe("Implementation", () => {
                       console.log("Reward Activity Id : " + RewardActivityID);
                       browser.back();
                       action.doClick($("*=" + ImplementationName));
-                      action.doWaitForElement($(rofPage.rewardPlanDesignsHeaderLink));
+                      action.doWaitForElement(
+                        $(rofPage.rewardPlanDesignsHeaderLink)
+                      );
                       action.doClick($(rofPage.rewardPlanDesignsHeaderLink));
                       var url = browser.getUrl();
                       var RewardPlanDesignsBody = url
@@ -237,13 +284,16 @@ describe("Implementation", () => {
                       );
                       browser.setTimeout({ implicit: 2000 });
                       if (RewardPlanNames.length > 5) {
-                        action.doClick($("#" + RewardPlanDesignsBody).$("a*=Show"));
+                        action.doClick(
+                          $("#" + RewardPlanDesignsBody).$("a*=Show")
+                        );
                       }
                       action.doClick($("=" + RewardPlanName));
                       action.doClick($("=" + rewardActivityNumber));
-                    }
-                    else {
-                      console.log("No custom activity for : " + RewardActivityID);
+                    } else {
+                      console.log(
+                        "No custom activity for : " + RewardActivityID
+                      );
                     }
 
                     // switch (CTA) {
@@ -298,7 +348,7 @@ describe("Implementation", () => {
 
                     console.log(
                       "The new object is: " +
-                      JSON.stringify(objectJson[key][activities])
+                        JSON.stringify(objectJson[key][activities])
                     );
                   } catch {
                     console.log("Selectors are not as per expectation");
@@ -314,8 +364,7 @@ describe("Implementation", () => {
                 action.doClick($("=" + ImplementationName));
               }
             }
-          }
-          else {
+          } else {
             console.log("Client has no reward plan members");
           }
         } catch (exception) {
@@ -326,7 +375,7 @@ describe("Implementation", () => {
       }
     });
 
-    // rallyUtil.writeToFile(outPath, objectJson);
+    //rallyUtil.writeToFile(outPath, objectJson);
   } catch (exception) {
     throw exception;
   }
