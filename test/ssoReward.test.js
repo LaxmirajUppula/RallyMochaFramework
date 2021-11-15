@@ -12,10 +12,12 @@ const rofPage = require("../pages/rof.page");
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
-const ssoObjectJson = require("../testdata/ssoInternalLinks.json");
-const ssoMapingObjectJson = require("../testdata/ssoMapping.json");
+// const ssoObjectJson = require("../testdata/ssoInternalLinks.json");
+// const ssoMapingObjectJson = require("../testdata/ssoMapping.json");
 let ActivityName = [];
-var RewardActivityID;
+let RewardActivityID;
+let CTAValue;
+let CTA;
 
 describe("Implementation", () => {
   try {
@@ -44,7 +46,7 @@ describe("Implementation", () => {
           console.log(CA);
           if (!CA) {
             // ******************************************   Capturing Custom Reward Activities into an Array   **************************************************
-            
+
             action.doClick($("*=Custom Reward Activities["));
             var url = browser.getUrl();
             var customActivitiesBody = url
@@ -163,28 +165,20 @@ describe("Implementation", () => {
                       rofPage.checkboxCopyTemplate
                     ).getAttribute("title");
 
-                    const CTA = action.doGetText($(rofPage.CTA));
-                    let CTAValue;
+                    CTA = action.doGetText($(rofPage.CTA));
+
 
                     expect($(rofPage.RewardActivityID)).toExist();
-                    var RewardActivityID = action.doGetText(
+                    RewardActivityID = action.doGetText(
                       $(rofPage.RewardActivityID)
                     );
 
                     expect($(rofPage.CTAValue)).toExist();
                     CTAValue = action.doGetText($(rofPage.CTAValue));
 
-                    console.log("Call to Action : " + CTA);
-                    console.log("CTA Value : " + CTAValue);
-                    console.log("Reward Activity Id : " + RewardActivityID);
-                    console.log(
-                      "Copy Template Checkbox status is : " + chkCopyTemp
-                    );
-
-
                     console.log(
                       "If Reward activity id present in custom Activity returns true status : " +
-                        ActivityName.includes(RewardActivityID)
+                      ActivityName.includes(RewardActivityID)
                     );
 
                     // *******************************************************Validating the custom reward Activity id match & capturing values**********************************
@@ -197,13 +191,13 @@ describe("Implementation", () => {
                       var customActivitiesBody = url
                         .replace(/(.*)#/, "")
                         .replace("target", "body");
-  
+
                       console.log(customActivitiesBody);
-  
+
                       const customActivityNames = $$(
                         "#" + customActivitiesBody + " th:nth-child(2)"
                       );
-  
+
                       if (customActivityNames.length > 5) {
                         action.doClick(
                           $("#" + customActivitiesBody).$("a*=Go to list")
@@ -218,13 +212,13 @@ describe("Implementation", () => {
                       } else {
                         action.doClick($("=" + RewardActivityID));
                       }
-                      var RewardActivityID = action.doGetText(
+                      RewardActivityID = action.doGetText(
                         $("//div[@id='Name_ileinner']")
                       );
-                      const CTA = action.doGetText(
+                      CTA = action.doGetText(
                         $("div[id='00NE0000006KqBg_ileinner']")
                       );
-                      const CTAValue = action.doGetText(
+                      CTAValue = action.doGetText(
                         $("div[id='00NE0000006KqBh_ileinner']")
                       );
                       console.log("Call to Action : " + CTA);
@@ -248,19 +242,29 @@ describe("Implementation", () => {
                       action.doClick($("=" + RewardPlanName));
                       action.doClick($("=" + rewardActivityNumber));
                     }
-
-                    switch (CTA) {
-                      case "Rally Internal Link":
-                        let urlValue = ssoObjectJson[CTAValue];
-                        console.log("Rally Internal Link is : " + urlValue);
-                        break;
-                      case "SSO":
-                        let ssoUrlValue = ssoMapingObjectJson[CTAValue];
-                        console.log("SSO to Quest link is : " + ssoUrlValue);
-                        break;
-                      default:
-                        break;
+                    else {
+                      console.log("No custom activity for : " + RewardActivityID);
                     }
+
+                    // switch (CTA) {
+                    //   case "Rally Internal Link":
+                    //     let urlValue = ssoObjectJson[CTAValue];
+                    //     console.log("Rally Internal Link is : " + urlValue);
+                    //     break;
+                    //   case "SSO":
+                    //     let ssoUrlValue = ssoMapingObjectJson[CTAValue];
+                    //     console.log("SSO to Quest link is : " + ssoUrlValue);
+                    //     break;
+                    //   default:
+                    //     break;
+                    // }
+
+                    console.log("Call to Action : " + CTA);
+                    console.log("CTA Value : " + CTAValue);
+                    console.log("Reward Activity Id : " + RewardActivityID);
+                    console.log(
+                      "Copy Template Checkbox status is : " + chkCopyTemp
+                    );
 
                     const activities = "activities";
                     const ctaAction = "ctaAction";
@@ -294,7 +298,7 @@ describe("Implementation", () => {
 
                     console.log(
                       "The new object is: " +
-                        JSON.stringify(objectJson[key][activities])
+                      JSON.stringify(objectJson[key][activities])
                     );
                   } catch {
                     console.log("Selectors are not as per expectation");
@@ -310,6 +314,9 @@ describe("Implementation", () => {
                 action.doClick($("=" + ImplementationName));
               }
             }
+          }
+          else {
+            console.log("Client has no reward plan members");
           }
         } catch (exception) {
           console.log(
