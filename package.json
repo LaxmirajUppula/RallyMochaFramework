@@ -19,6 +19,7 @@
         "base-64": "^1.0.0",
         "chai-webdriverio": "^1.0.0",
         "del": "^6.0.0",
+        "jshint": "^2.13.1",
         "moment": "^2.29.1",
         "path": "^0.12.7",
         "sync-request": "^6.1.0",
