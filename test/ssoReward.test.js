@@ -12,6 +12,7 @@ const rofPage = require("../pages/rof.page");
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
+const { count } = require("console");
 // const ssoObjectJson = require("../testdata/ssoInternalLinks.json");
 // const ssoMapingObjectJson = require("../testdata/ssoMapping.json");
 let ActivityName = [];
@@ -25,8 +26,9 @@ describe("Implementation", () => {
     const out = "./../testdata/expected/sso.json";
     const outPath = path.resolve(__dirname, out);
     let Json1 = fs.readFileSync(outPath);
+    // let Json1 = require("./../testdata/expected/sso.json");
     let objectJson = JSON.parse(Json1);
-    console.log("Some value: " + objectJson);
+    console.log("Some value: " + JSON.stringify(objectJson));
 
     before(function () {
       rof.loginSalesforce(constants.username, constants.password);
@@ -223,7 +225,7 @@ describe("Implementation", () => {
 
                     console.log(
                       "If Reward activity id present in custom Activity returns true status : " +
-                        ActivityName.includes(RewardActivityID)
+                      ActivityName.includes(RewardActivityID)
                     );
 
                     // *******************************************************Validating the custom reward Activity id match & capturing values**********************************
@@ -316,29 +318,29 @@ describe("Implementation", () => {
                       "Copy Template Checkbox status is : " + chkCopyTemp
                     );
 
-                    const activities = "activities";
-                    const ctaAction = "ctaAction";
-                    const ctaValue = "ctaValue";
-                    const rewardActID = "rewardActID";
-                    const chkCT = "chkCT";
+                    let activities = "activities";
+                    let ctaAction = "ctaAction";
+                    let ctaValue = "ctaValue";
+                    let rewardActID = "rewardActID";
+                    let chkCT = "chkCT";
 
                     if (actLength > 1) {
-                      if (!objectJson[key][activities]) {
-                        objectJson[key][activities] = [];
+                      if (!objectJson[key][arrCount][activities]) {
+                        objectJson[key][arrCount][activities] = [];
                       }
 
-                      objectJson[key][activities].push({
+                      objectJson[key][arrCount][activities].push({
                         [ctaAction]: CTA,
                         [ctaValue]: CTAValue,
                         [rewardActID]: RewardActivityID,
                         [chkCT]: chkCopyTemp,
                       });
                     } else {
-                      if (!objectJson[key][activities]) {
-                        objectJson[key][activities] = {};
+                      if (!objectJson[key][arrCount][activities]) {
+                        objectJson[key][arrCount][activities] = {};
                       }
 
-                      objectJson[key][activities] = {
+                      objectJson[key][arrCount][activities] = {
                         [ctaAction]: CTA,
                         [ctaValue]: CTAValue,
                         [rewardActID]: RewardActivityID,
@@ -348,8 +350,9 @@ describe("Implementation", () => {
 
                     console.log(
                       "The new object is: " +
-                        JSON.stringify(objectJson[key][activities])
+                      JSON.stringify(objectJson[key][activities])
                     );
+
                   } catch {
                     console.log("Selectors are not as per expectation");
                   }
@@ -373,9 +376,14 @@ describe("Implementation", () => {
           );
         }
       }
+
+      console.log(
+        "The complete object is: " +
+        JSON.stringify(objectJson, null, 4)
+      );
+      rallyUtil.writeToFile(outPath, objectJson);
     });
 
-    //rallyUtil.writeToFile(outPath, objectJson);
   } catch (exception) {
     throw exception;
   }
