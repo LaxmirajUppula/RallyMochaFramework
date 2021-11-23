@@ -42,11 +42,21 @@ class buildPage {
   }
 
   RewardsPage() {
-    action.doWaitForElement($(homePage.notNow));
-    action.doClick($(homePage.notNow));
+    // action.doWaitForElement($(homePage.notNow));
+    // action.doClick($(homePage.notNow));
     action.doWaitForElement($(homePage.reward));
     action.doClick($(homePage.reward));
-    action.doWaitForElement(rewardsPage.genericButton);
+  }
+
+  UILogin(loginUrl, email, password){
+    browser.newWindow(loginUrl);
+    action.doSetValue(
+      $(loginPage.email),
+      email
+    );
+    action.doSetValue($(loginPage.password), password);
+    action.doClick($(loginPage.loginBtn));
+    action.doClick($("#rh-header-company-info-image"));
   }
 }
 module.exports = new buildPage();

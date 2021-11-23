@@ -1,3 +1,5 @@
 module.exports = {
-  LoginURL: "https://accounts.werally.com/login"
+  LoginURL: "https://accounts.werally.com/login",
+  BlueSteelURL: "https://accounts.bluesteel.werally.in/login",
+  SFUrl : "https://rallyhealth.my.salesforce.com/"
 }

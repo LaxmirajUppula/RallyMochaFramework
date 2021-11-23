@@ -13,8 +13,8 @@ const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
 const { count } = require("console");
-// const ssoObjectJson = require("../testdata/ssoInternalLinks.json");
-// const ssoMapingObjectJson = require("../testdata/ssoMapping.json");
+const ssoObjectJson = require("../testdata/ssoInternalLinks.json");
+const ssoMapingObjectJson = require("../testdata/ssoMapping.json");
 let ActivityName = [];
 let subActivitiesId = [];
 let RewardActivityID;
@@ -87,7 +87,7 @@ describe("Implementation", () => {
               ActivityName.push(customActivityName);
             }
             console.log(ActivityName);
-            $("div[class='ptBreadcrumb'] a").click();
+            // $("div[class='ptBreadcrumb'] a").click();
           } else {
             console.log("No Custom reward Activities");
           }
@@ -136,7 +136,7 @@ describe("Implementation", () => {
                 let a_xpath;
 
                 let actLength = Activities.length;
-                if (actLength > 5) {
+                if ($("#" + ActivitiesBody).$("a*=Go to list").isExisting()) {
                   action.doClick($("#" + ActivitiesBody).$("a*=Go to list"));
                   Activities = $$(
                     ".bPageBlock.brandSecondaryBrd.secondaryPalette th:nth-child(2)"
@@ -150,9 +150,14 @@ describe("Implementation", () => {
                   a_xpath = "]/th/a";
                 }
 
+                // *********************   UI ********************************************
+                src.UILogin(clientData.BlueSteelURL, userName, password)
+                src.RewardsPage();
+                browser.switchWindow(clientData.SFUrl)
+
                 for (
                   let intCount = intActCount;
-                  intCount <= Activities.length - 1;
+                  intCount <= Activities.length;
                   intCount++
                 ) {
                   try {
@@ -297,20 +302,6 @@ describe("Implementation", () => {
                         "No custom activity for : " + RewardActivityID
                       );
                     }
-
-                    // switch (CTA) {
-                    //   case "Rally Internal Link":
-                    //     let urlValue = ssoObjectJson[CTAValue];
-                    //     console.log("Rally Internal Link is : " + urlValue);
-                    //     break;
-                    //   case "SSO":
-                    //     let ssoUrlValue = ssoMapingObjectJson[CTAValue];
-                    //     console.log("SSO to Quest link is : " + ssoUrlValue);
-                    //     break;
-                    //   default:
-                    //     break;
-                    // }
-
                     console.log("Call to Action : " + CTA);
                     console.log("CTA Value : " + CTAValue);
                     console.log("Reward Activity Id : " + RewardActivityID);
@@ -362,8 +353,44 @@ describe("Implementation", () => {
                   } else {
                     action.doClick($("=" + RewardPlanName));
                   }
-                }
-                action.doClick($("*=Reward Plan Design:"));
+                
+                  browser.switchWindow("https://member.bluesteel.werally.in/rewards/")
+                  if($("a[data-testid='missing-reward']").isExisting()){
+                  action.doClick($("a[data-testid='missing-reward']"));
+                  }
+                  if (CTA === "Phone") {
+                    var phoneNum = $("div[data-testid='"+ RewardActivityID +"'] button").getText();
+                  }
+                  else {
+                  $("div[data-testid='"+ RewardActivityID +"'] button").click();
+                  browser.pause(5000)
+                  var valUrl = browser.getUrl();
+                  browser.url("https://member.bluesteel.werally.in/rewards/")
+                  }
+                   switch (CTA) {
+                      case "Rally Internal Link":
+                        let urlValue = ssoObjectJson[CTAValue];
+                        console.log("Rally Internal Link is : " + urlValue);
+                        //assert.equal(valUrl, urlValue,"Requirement mismatch")
+                        break;
+                      case "SSO":
+                        let ssoUrlValue = ssoMapingObjectJson[CTAValue];
+                        console.log("SSO to Quest link is : " + ssoUrlValue);
+                        //assert.equal(ssoUrlValue, valUrl, "Requirement Mismatch" )
+                        break;
+                      case "Rally Internal Details Page":
+                        //expect(browser).toHaveUrlContaining(RewardActivityID)
+                        break;
+                      case "External URL":
+                          // assert.equal(CTAValue, valUrl, "Requirement mismatch")
+                          break;
+                      case "Phone":
+                          //assert.equal(CTAValue, phoneNum, "Requirement Mismatch")
+                      default:
+                        break;
+                    }
+                 browser.switchWindow('https://rallyhealth.my.salesforce.com/')
+                 }
                 action.doClick($("=" + ImplementationName));
               }
             }
@@ -371,6 +398,7 @@ describe("Implementation", () => {
             console.log("Client has no reward plan members");
           }
         } catch (exception) {
+          throw exception;
           console.log(
             "Issue with Implementation and the error is " + exception
           );
