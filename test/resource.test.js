@@ -12,7 +12,7 @@ const path = require("path");
 
 describe("Implementation", () => {
   try {
-    const dataPath = path.resolve(__dirname,"./../clientTestData")
+    const dataPath = path.resolve(__dirname, "./../clientTestData");
     const GTUPrimaryFiles = fs.readdirSync(dataPath, ["**.xlsx"]);
     for (let i = 0; i < GTUPrimaryFiles.length; i++) {
       const files = GTUPrimaryFiles[i];
@@ -21,8 +21,7 @@ describe("Implementation", () => {
       const sheet = workbookSheets[0];
       const testData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
       const clientName =
-        testData[0]["CUST_LEG_NM"];
-        // + " - "+ launchDate.launchDate;
+        testData[0]["CUST_LEG_NM"] + " - " + launchDate.launchDate;
       describe(clientName, () => {
         it("Benefits Page", () => {
           try {
