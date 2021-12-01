@@ -119,7 +119,17 @@ exports.config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: ["chromedriver"],
+  // services: ["chromedriver"],
+  services: [
+    ['chromedriver', {
+        logFileName: 'wdio-chromedriver.log', // default
+        outputDir: 'driver-logs', // overwrites the config.outputDir
+        args: ['--silent'],
+        port: 9595,
+        path: "/node_modules/chromedriver/lib/chromedriver/chromedriver",
+        hostname : "localhost"
+    }]
+  ],
 
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber

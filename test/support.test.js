@@ -10,7 +10,6 @@ const launchDate = require("../launchDate");
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
-require('chromedriver')
 
 describe("Implementation", () => {
   try {
@@ -22,83 +21,91 @@ describe("Implementation", () => {
       const workbookSheets = workbook.SheetNames;
       const sheet = workbookSheets[0];
       const testData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
-      const clientName =
-        testData[0]["CUST_LEG_NM"] + " - " + launchDate.launchDate;
-      describe(clientName, () => {
-        it("Support Details Page", () => {
-          try {
-            // Taking Requirement from Salesforce
-            rof.getCustomerSupportNumber(
-              constants.username,
-              constants.password,
-              clientName
-            );
-            action.doWaitForElement($(SFPage.customerSupportNumber));
-            $(SFPage.customerSupportNumber).scrollIntoView();
-            const CustomerSupportNumber = action.doGetText(
-              $(SFPage.customerSupportNumber)
-            );
-            browser.takeScreenshot();
-            if (CustomerSupportNumber === "Optum Support Custom") {
-              const SFsupportNumber = action
-                .doGetText($(SFPage.customCustomerSN))
-                .replace(/[^0-9]/g, "");
-              // Rally UI Validation
-              src.Login(
-                clientData.LoginURL,
-                testData[0]["RALLY_EMAIL"],
-                testData[0]["RALLY_PASSWORD"]
+      if (
+        testData[0]["CUST_LEG_NM"] === undefined ||
+        testData[0]["RALLY_EMAIL"] === undefined ||
+        testData[0]["RALLY_PASSWORD"] === undefined
+      ) {
+        console.log("Required data not available for this client : " + testData[0]["CUST_LEG_NM"]);
+      } else {
+        const clientName =
+          testData[0]["CUST_LEG_NM"] + " - " + launchDate.launchDate;
+        describe(clientName, () => {
+          it("Support Details Page", () => {
+            try {
+              // Taking Requirement from Salesforce
+              rof.getCustomerSupportNumber(
+                constants.username,
+                constants.password,
+                clientName
               );
-              src.SupportPage();
-              const RSupportNumber = action
-                .doGetText($(supportPage.contactSupportNumber))
-                .replace(/[^a-zA-Z0-9]/g, "");
+              action.doWaitForElement($(SFPage.customerSupportNumber));
+              $(SFPage.customerSupportNumber).scrollIntoView();
+              const CustomerSupportNumber = action.doGetText(
+                $(SFPage.customerSupportNumber)
+              );
               browser.takeScreenshot();
-              assert.equal(
-                SFsupportNumber,
-                RSupportNumber,
-                "Invalid Customer Support Number"
-              );
-              console.log(
-                clientName +
-                  " Support Details Validation Completed Successfully"
-              );
-              browser.reloadSession();
-            } else {
-              const supportNumber = CustomerSupportNumber.replace(
-                /[^0-9]/g,
-                ""
-              );
-              const SFsupportNumber = supportNumber.slice(1);
+              if (CustomerSupportNumber === "Optum Support Custom") {
+                const SFsupportNumber = action
+                  .doGetText($(SFPage.customCustomerSN))
+                  .replace(/[^0-9]/g, "");
+                // Rally UI Validation
+                src.Login(
+                  clientData.LoginURL,
+                  testData[0]["RALLY_EMAIL"],
+                  testData[0]["RALLY_PASSWORD"]
+                );
+                src.SupportPage();
+                const RSupportNumber = action
+                  .doGetText($(supportPage.contactSupportNumber))
+                  .replace(/[^a-zA-Z0-9]/g, "");
+                browser.takeScreenshot();
+                assert.equal(
+                  SFsupportNumber,
+                  RSupportNumber,
+                  "Invalid Customer Support Number"
+                );
+                console.log(
+                  clientName +
+                    " Support Details Validation Completed Successfully"
+                );
+                browser.reloadSession();
+              } else {
+                const supportNumber = CustomerSupportNumber.replace(
+                  /[^0-9]/g,
+                  ""
+                );
+                const SFsupportNumber = supportNumber.slice(1);
 
-              // Rally UI Validation
-              src.Login(
-                clientData.LoginURL,
-                testData[0]["RALLY_EMAIL"],
-                testData[0]["RALLY_PASSWORD"]
-              );
-              src.SupportPage();
-              const RSupportNumber = action
-                .doGetText($(supportPage.contactSupportNumber))
-                .replace(/[^0-9]/g, "");
-              browser.takeScreenshot();
-              assert.equal(
-                SFsupportNumber,
-                RSupportNumber,
-                "Invalid Customer Support Number"
-              );
-              console.log(
-                clientName +
-                  " Support Details Validation Completed Successfully"
-              );
+                // Rally UI Validation
+                src.Login(
+                  clientData.LoginURL,
+                  testData[0]["RALLY_EMAIL"],
+                  testData[0]["RALLY_PASSWORD"]
+                );
+                src.SupportPage();
+                const RSupportNumber = action
+                  .doGetText($(supportPage.contactSupportNumber))
+                  .replace(/[^0-9]/g, "");
+                browser.takeScreenshot();
+                assert.equal(
+                  SFsupportNumber,
+                  RSupportNumber,
+                  "Invalid Customer Support Number"
+                );
+                console.log(
+                  clientName +
+                    " Support Details Validation Completed Successfully"
+                );
+                browser.reloadSession();
+              }
+            } catch (exception) {
               browser.reloadSession();
+              throw exception;
             }
-          } catch (exception) {
-            browser.reloadSession();
-            throw exception;
-          }
+          });
         });
-      });
+      }
     }
   } catch (exception) {
     browser.reloadSession();
