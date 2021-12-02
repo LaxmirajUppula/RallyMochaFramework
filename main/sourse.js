@@ -11,7 +11,7 @@ class buildPage {
     action.doSetValue($(loginPage.email), email);
     action.doSetValue($(loginPage.password), password);
     action.doClick($(loginPage.loginBtn));
-    browser.setTimeout({ implicit: 1000 });
+    browser.setTimeout({ implicit: 5000 });
     let alertFlag = $(loginPage.alertBanner).isDisplayed();
     if (alertFlag) {
       assert.equal(
