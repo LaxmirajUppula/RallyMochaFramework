@@ -79,23 +79,46 @@ class rallyUtil {
     username = 'username';
     password = 'password';
 
+    console.log("All files" + clientFiles);
+
     clientFiles.forEach(function (file) {
 
       excelUtil.excel_getTableRows(dirPath + '/' + file, 'Sheet1', function (results) {
 
+        let custLegalName;
+        let custEmail;
+        let custPassword;
+
         if (flag != 'with') {
-          sfExpectation[results[0].CUST_LEG_NM] = { [username]: results[0].RALLY_EMAIL, [password]: results[0].RALLY_PASSWORD };
+          custLegalName = results[0].CUST_LEG_NM;
+          custEmail = results[0].RALLY_EMAIL;
+          custPassword = results[0].RALLY_PASSWORD;
+          if (custLegalName) {
+            if (custEmail || custPassword) {
+              sfExpectation[results[0].CUST_LEG_NM] = { [username]: results[0].RALLY_EMAIL, [password]: results[0].RALLY_PASSWORD };
+            }
+          }
         }
         else {
           results.forEach(function (record) {
 
-            let customerName = record.CUST_LEG_NM;
-            if (!sfExpectation[customerName]) {
-              sfExpectation[customerName] = [];
+            custLegalName = record.CUST_LEG_NM;
+            custEmail = record.RALLY_EMAIL;
+            custPassword = record.RALLY_PASSWORD;
+
+            if (!sfExpectation[custLegalName]) {
+              if (custLegalName) {
+                sfExpectation[custLegalName] = [];
+              }
             }
 
             if (flag != 'without') {
-              sfExpectation[customerName].push({ [username]: record.RALLY_EMAIL, [password]: record.RALLY_PASSWORD });
+              if (custLegalName) {
+                if (custEmail || custPassword) {
+                  sfExpectation[custLegalName].push({ [username]: custEmail, [password]: custPassword });
+                }
+              }
+
             }
 
           });
@@ -111,8 +134,7 @@ class rallyUtil {
     for (let key in jsonObj) {
       console.log(key + " -> " + jsonObj[key]);
 
-      let clientImp = key 
-      // + ' - ' + dateOfRelease;
+      let clientImp = key + ' - ' + dateOfRelease;
       let contactNumber = 'contactNumber';
       let resourceHeadline = 'resourceHeadline';
       let resourceBody = 'resourceBody';
