@@ -8,25 +8,25 @@ const rallyUtil = require("../helpers/rallyHelpers");
 const rof = require("../main/rof");
 const constants = require("../constants");
 const launchDate = require("../testdata/generic.json");
-let objectJson =require("./../testdata/expected/resource.json");
+let objectJson = require("./../testdata/expected/resource.json");
 
 
 describe("Implementation", () => {
-  try {
-    before(function () {
-      // runs once before the first test in this block
-      rof.loginSalesforce(constants.username, constants.password);
-      rallyUtil.saveClientDetailsFromSF("resource");
-      const out = "./../testdata/expected/resource.json";
-      const outPath = path.resolve(__dirname, out);
-      let Json1 = fs.readFileSync(outPath);
-      objectJson = JSON.parse(Json1);
+  before(function () {
+    // runs once before the first test in this block
+    rof.loginSalesforce(constants.username, constants.password);
+    rallyUtil.saveClientDetailsFromSF("resource");
+    const out = "./../testdata/expected/resource.json";
+    const outPath = path.resolve(__dirname, out);
+    let Json1 = fs.readFileSync(outPath);
+    objectJson = JSON.parse(Json1);
 
-    });
-    
+  });
 
-    //Validation
-    for (let key in objectJson) {
+
+  //Validation
+  for (let key in objectJson) {
+    try {
       const clientName = JSON.stringify(key);
       describe(clientName, () => {
         it("Benefits Page", () => {
@@ -44,7 +44,7 @@ describe("Implementation", () => {
                   browser.takeScreenshot();
                   console.log(
                     clientName +
-                      " Benefits Page Validation Completed Successfully"
+                    " Benefits Page Validation Completed Successfully"
                   );
                   browser.reloadSession();
                 } else {
@@ -71,7 +71,7 @@ describe("Implementation", () => {
                   );
                   console.log(
                     clientName +
-                      " Benefits Page Validation Completed Successfully"
+                    " Benefits Page Validation Completed Successfully"
                   );
                   browser.reloadSession();
                 }
@@ -85,7 +85,7 @@ describe("Implementation", () => {
             var password = objectJson[key].password;
             var resourceHeadline = objectJson[key].resourceHeadline;
             var resourceBody = objectJson[key].resourceBody;
-            console.log("resouce headline ="+resourceHeadline)
+            console.log("resouce headline =" + resourceHeadline)
             console.log(userName);
             try {
               if (resourceHeadline === null) {
@@ -95,7 +95,7 @@ describe("Implementation", () => {
                 browser.takeScreenshot();
                 console.log(
                   clientName +
-                    " Benefits Page Validation Completed Successfully"
+                  " Benefits Page Validation Completed Successfully"
                 );
                 browser.reloadSession();
               } else {
@@ -122,7 +122,7 @@ describe("Implementation", () => {
                 );
                 console.log(
                   clientName +
-                    " Benefits Page Validation Completed Successfully"
+                  " Benefits Page Validation Completed Successfully"
                 );
                 browser.reloadSession();
               }
@@ -133,9 +133,10 @@ describe("Implementation", () => {
           }
         });
       });
+    } catch (exception) {
+      browser.reloadSession();
+      throw exception;
     }
-  } catch (exception) {
-    browser.reloadSession();
-    throw exception;
   }
+
 });

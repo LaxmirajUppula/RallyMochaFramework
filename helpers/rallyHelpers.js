@@ -138,118 +138,126 @@ class rallyUtil {
 
   createClientData(jsonObj, dateOfRelease, scenario) {
     for (let key in jsonObj) {
-      console.log(key + " -> " + jsonObj[key]);
+      try {
+        console.log(key + " -> " + jsonObj[key]);
 
-      let clientImp = key + " - " + dateOfRelease;
-      let contactNumber = "contactNumber";
-      let resourceHeadline = "resourceHeadline";
-      let resourceBody = "resourceBody";
-      let Headline;
-      let BodyText;
-      let CustomerSupportNumber;
+        let clientImp = key + " - " + dateOfRelease;
+        let contactNumber = "contactNumber";
+        let resourceHeadline = "resourceHeadline";
+        let resourceBody = "resourceBody";
+        let Headline;
+        let BodyText;
+        let CustomerSupportNumber;
 
-      browser.setTimeout({ pageLoad: 50000 });
+        browser.setTimeout({ pageLoad: 50000 });
 
-      // action.doSetValue($(SFPage.search), clientImp);
+        // action.doSetValue($(SFPage.search), clientImp);
 
-      // browser.setTimeout({ 'pageLoad': 50000 })
-      // browser.pause(3000);
+        // browser.setTimeout({ 'pageLoad': 50000 })
+        // browser.pause(3000);
 
-      // action.doClick($(SFPage.searchBtn));
+        // action.doClick($(SFPage.searchBtn));
 
-      // console.log("Client Implementation Name: " + clientImp);
-      // browser.setTimeout({ 'implicit': 5000 })
+        // console.log("Client Implementation Name: " + clientImp);
+        // browser.setTimeout({ 'implicit': 5000 })
 
-      // $(`//a[normalize-space()= "${clientImp}"]`).click();
-
-      action.doSetValue($(SFPage.search), clientImp);
-
-      action.doClick($(SFPage.searchBtn));
-
-      browser.setTimeout({ implicit: 15000 });
-
-      let impElement = $(
-        "//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a"
-      ).isExisting();
-
-      console.log("Implementation Status : " + impElement);
-
-      // assert.equal(impElement, true, "Implementation Name format mismatch");
-
-      if (impElement) {
-        action.doClick(
-          $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
-        );
-      } else {
-        clientImp = clientImp.replace(
-          generic.launchDate,
-
-          generic.launchDateOther
-        );
-
-        console.log("New Imp Name : " + clientImp);
+        // $(`//a[normalize-space()= "${clientImp}"]`).click();
 
         action.doSetValue($(SFPage.search), clientImp);
 
         action.doClick($(SFPage.searchBtn));
 
-        action.doClick(
-          $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
-        );
-      }
-      if (scenario === "support") {
-        console.log("Inside support");
-        action.doWaitForElement($(SFPage.customerSupportNumber));
-        $(SFPage.customerSupportNumber).scrollIntoView();
-        CustomerSupportNumber = action.doGetText(
-          $(SFPage.customerSupportNumber)
-        );
+        browser.setTimeout({ implicit: 15000 });
 
-        browser.takeScreenshot();
+        let impElement = $(
+          "//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a"
+        ).isExisting();
 
-        if (CustomerSupportNumber === "Optum Support Custom") {
-          CustomerSupportNumber = action
-            .doGetText($(SFPage.customCustomerSN))
-            .replace(/[^0-9]/g, "");
-        }
-        console.log("Value of support number is: " + CustomerSupportNumber);
-      } else {
-        const CustomResoucePageChkBox = SFPage.customResoursePage;
-        action.doWaitForElement($(CustomResoucePageChkBox));
-        $(CustomResoucePageChkBox).scrollIntoView();
-        browser.takeScreenshot();
-        const check = $(CustomResoucePageChkBox)
-          .getAttribute("title")
-          .toLowerCase();
-        if (check === "checked") {
-          action.doWaitForElement($(SFPage.resourcePageRequirement));
-          action.doClick($(SFPage.resourcePageRequirement));
-          action.doWaitForElement($(SFPage.resourcePageHeadline));
-          Headline = action.doGetText($(SFPage.resourcePageHeadline));
-          BodyText = action.doGetText($(SFPage.resourcePageBodyText));
-          browser.takeScreenshot();
+        console.log("Implementation Status : " + impElement);
+
+        // assert.equal(impElement, true, "Implementation Name format mismatch");
+
+        if (impElement) {
+          action.doClick(
+            $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
+          );
         } else {
-          Headline = null;
-          BodyText = null;
+          clientImp = clientImp.replace(
+            generic.launchDate,
+
+            generic.launchDateOther
+          );
+
+          console.log("New Imp Name : " + clientImp);
+
+          action.doSetValue($(SFPage.search), clientImp);
+
+          action.doClick($(SFPage.searchBtn));
+
+          action.doClick(
+            $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
+          );
         }
-      }
-      if (this.isArray(jsonObj[key])) {
-        for (let arrCount = 0; arrCount < jsonObj[key].length; arrCount++) {
-          if (scenario === "support") {
-            jsonObj[key][arrCount][contactNumber] = CustomerSupportNumber;
+        if (scenario === "support") {
+          console.log("Inside support");
+          action.doWaitForElement($(SFPage.customerSupportNumber));
+          $(SFPage.customerSupportNumber).scrollIntoView();
+          CustomerSupportNumber = action.doGetText(
+            $(SFPage.customerSupportNumber)
+          );
+
+          browser.takeScreenshot();
+
+          if (CustomerSupportNumber === "Optum Support Custom") {
+            CustomerSupportNumber = action
+              .doGetText($(SFPage.customCustomerSN))
+              .replace(/[^0-9]/g, "");
+          }
+          console.log("Value of support number is: " + CustomerSupportNumber);
+        } else {
+          const CustomResoucePageChkBox = SFPage.customResoursePage;
+          action.doWaitForElement($(CustomResoucePageChkBox));
+          $(CustomResoucePageChkBox).scrollIntoView();
+          browser.takeScreenshot();
+          const check = $(CustomResoucePageChkBox)
+            .getAttribute("title")
+            .toLowerCase();
+          if (check === "checked") {
+            action.doWaitForElement($(SFPage.resourcePageRequirement));
+            action.doClick($(SFPage.resourcePageRequirement));
+            action.doWaitForElement($(SFPage.resourcePageHeadline));
+            Headline = action.doGetText($(SFPage.resourcePageHeadline));
+            BodyText = action.doGetText($(SFPage.resourcePageBodyText));
+            browser.takeScreenshot();
           } else {
-            jsonObj[key][arrCount][resourceHeadline] = Headline;
-            jsonObj[key][arrCount][resourceBody] = BodyText;
+            Headline = null;
+            BodyText = null;
           }
         }
-      } else {
-        if (scenario === "support") {
-          jsonObj[key][contactNumber] = CustomerSupportNumber;
+        if (this.isArray(jsonObj[key])) {
+          for (let arrCount = 0; arrCount < jsonObj[key].length; arrCount++) {
+            if (scenario === "support") {
+              jsonObj[key][arrCount][contactNumber] = CustomerSupportNumber;
+            } else {
+              jsonObj[key][arrCount][resourceHeadline] = Headline;
+              jsonObj[key][arrCount][resourceBody] = BodyText;
+            }
+          }
         } else {
-          jsonObj[key][resourceHeadline] = Headline;
-          jsonObj[key][resourceBody] = BodyText;
+          if (scenario === "support") {
+            jsonObj[key][contactNumber] = CustomerSupportNumber;
+          } else {
+            jsonObj[key][resourceHeadline] = Headline;
+            jsonObj[key][resourceBody] = BodyText;
+          }
         }
       }
+      catch (exception) {
+        browser.reloadSession();
+        rof.loginSalesforce(constants.username, constants.password);
+        throw exception;
+      }
+
     }
     return jsonObj;
   }
