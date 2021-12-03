@@ -451,15 +451,15 @@ describe("Implementation", () => {
                   browser.switchWindow(clientData.SFUrl);
                 }
                 browser.switchWindow(clientData.BSRewardPage);
-                browser.url(clientData.BSLogout);
+                //browser.url(clientData.BSLogout);
+                $(".account-bar-item--menu").moveTo();
+                action.doClick($("ac-account-menu-item[class='sc-ac-chrome hydrated'][data-ui-element-name='logout']"));
                 const handles = browser.getWindowHandles();
                 if (handles.length > 1) {
                   browser.switchToWindow(handles[1]);
                   browser.closeWindow();
                   browser.switchToWindow(handles[0]);
                 }
-                //$(".account-bar-item--menu").moveTo();
-                //($("ac-account-menu-item[class='sc-ac-chrome hydrated'][data-ui-element-name='logout']").$(".account-menu-item-label")).click();
                 browser.pause(15000);
                 browser.switchWindow(clientData.SFUrl);
                 action.doClick($("=" + ImplementationName));
