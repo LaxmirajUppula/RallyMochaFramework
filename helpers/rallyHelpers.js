@@ -253,8 +253,9 @@ class rallyUtil {
         }
       }
       catch (exception) {
-        browser.reloadSession();
-        rof.loginSalesforce(constants.username, constants.password);
+        // browser.reloadSession();
+        // rof.loginSalesforce(constants.username, constants.password);
+        console.log("Issue with fetching data from Salesforce for client: " + key)
         throw exception;
       }
 
