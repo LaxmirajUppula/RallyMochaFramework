@@ -202,18 +202,27 @@ class rallyUtil {
           console.log("Inside support");
           action.doWaitForElement($(SFPage.customerSupportNumber));
           $(SFPage.customerSupportNumber).scrollIntoView();
-          CustomerSupportNumber = action.doGetText(
-            $(SFPage.customerSupportNumber)
+          const SFCustomCustomerSupportNumber = action.doGetText(
+            $(SFPage.customCustomerSN)
           );
-
+          console.log(
+            "Custom Number is : " + SFCustomCustomerSupportNumber
+          );
           browser.takeScreenshot();
-
-          if (CustomerSupportNumber === "Optum Support Custom") {
+          if (SFCustomCustomerSupportNumber === " ") {
+            console.log("Inside if block");
+            CustomerSupportNumber = action
+              .doGetText($(SFPage.customerSupportNumber))
+              .replace(/[^0-9]/g, "")
+              .slice(1);
+          } else {
             CustomerSupportNumber = action
               .doGetText($(SFPage.customCustomerSN))
               .replace(/[^0-9]/g, "");
           }
-          console.log("Value of support number is: " + CustomerSupportNumber);
+          console.log(
+            "customer support number is : " + CustomerSupportNumber
+          );
         } else {
           const CustomResoucePageChkBox = SFPage.customResoursePage;
           action.doWaitForElement($(CustomResoucePageChkBox));
