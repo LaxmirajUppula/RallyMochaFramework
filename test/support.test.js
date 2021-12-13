@@ -63,8 +63,8 @@ describe("Implementation", () => {
               userName = objectJson[key].username;
               password = objectJson[key].password;
               contactNumber = objectJson[key].contactNumber
-                .replace(/[^0-9]/g, "")
-                .substring(1);
+                .replace(/[^0-9]/g, "");
+                // .substring(1);
               src.Login(clientData.LoginURL, userName, password);
               src.SupportPage();
               const RSupportNumber = action

@@ -167,7 +167,7 @@ class rallyUtil {
 
         action.doClick($(SFPage.searchBtn));
 
-        browser.setTimeout({ implicit: 15000 });
+        browser.setTimeout({ implicit: 20000 });
 
         let impElement = $(
           "//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a"
@@ -203,13 +203,12 @@ class rallyUtil {
           action.doWaitForElement($(SFPage.customerSupportNumber));
           $(SFPage.customerSupportNumber).scrollIntoView();
           const SFCustomCustomerSupportNumber = action.doGetText(
-            $(SFPage.customCustomerSN)
-          );
+            $(SFPage.customCustomerSN)).replace(/[^0-9]/g, "");
           console.log(
             "Custom Number is : " + SFCustomCustomerSupportNumber
           );
           browser.takeScreenshot();
-          if (SFCustomCustomerSupportNumber === " ") {
+          if (SFCustomCustomerSupportNumber === "") {
             console.log("Inside if block");
             CustomerSupportNumber = action
               .doGetText($(SFPage.customerSupportNumber))
