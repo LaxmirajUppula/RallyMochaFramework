@@ -105,6 +105,7 @@ describe("Implementation", () => {
                 browser.reloadSession();
               }
             } catch (exception) {
+              browser.takeScreenshot();
               browser.reloadSession();
               throw exception;
             }
@@ -113,6 +114,7 @@ describe("Implementation", () => {
       }
     }
   } catch (exception) {
+    browser.takeScreenshot();
     browser.reloadSession();
     throw exception;
   }

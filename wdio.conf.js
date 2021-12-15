@@ -256,15 +256,15 @@ exports.config = {
    */
   // afterTest: function(test, context, { error, result, duration, passed, retries }) {
   // },
-  afterTest: function(
-    test,
-    context,
-    { error, result, duration, passed, retries }
-  ) {
-    if (error) {
-      browser.takeScreenshot();
-    }
-  },
+  // afterTest: function(
+  //   test,
+  //   context,
+  //   { error, result, duration, passed, retries }
+  // ) {
+  //   if (error) {
+  //     browser.takeScreenshot();
+  //   }
+  // },
   /**
    * Hook that gets executed after the suite has ended
    * @param {Object} suite suite details
