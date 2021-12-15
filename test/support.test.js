@@ -9,6 +9,7 @@ const rof = require("../main/rof");
 const constants = require("../constants");
 const launchDate = require("../testdata/generic.json");
 let objectJson = require("./../testdata/expected/support.json");
+let userName, password, contactNumber;
 
 describe("Implementation", () => {
   before(function () {
@@ -30,11 +31,31 @@ describe("Implementation", () => {
           if (action.isArray(objectJson[key])) {
             for (arrCount = 0; arrCount < objectJson[key].length; arrCount++) {
               try {
-                userName = objectJson[key][arrCount].username;
-                password = objectJson[key][arrCount].password;
-                contactNumber = objectJson[key][arrCount].contactNumber
-                  .replace(/[^0-9]/g, "")
-                  .substring(1);
+                if (objectJson[key][arrCount].username) {
+                  userName = objectJson[key][arrCount].username;
+                }
+                else {
+                  userName = null;
+                }
+
+                if (objectJson[key][arrCount].password) {
+                  password = objectJson[key][arrCount].password;
+                }
+                else {
+                  password = null;
+                }
+
+                if (objectJson[key][arrCount].contactNumber) {
+                  contactNumber = objectJson[key][arrCount].contactNumber
+                    .replace(/[^0-9]/g, "")
+                    .substring(1);
+                }
+                else {
+                  contactNumber = null;
+                }
+
+                console.log("Contact number is: " + contactNumber);
+
                 // Rally UI Validation
                 src.Login(clientData.LoginURL, userName, password);
                 src.SupportPage();
@@ -51,6 +72,7 @@ describe("Implementation", () => {
                 browser.reloadSession();
               }
               catch (exception) {
+                browser.takeScreenshot();
                 browser.reloadSession();
                 throw exception;
               }
@@ -60,11 +82,31 @@ describe("Implementation", () => {
             try {
               console.log("Complete Json inside else: " + JSON.stringify(objectJson));
 
-              userName = objectJson[key].username;
-              password = objectJson[key].password;
-              contactNumber = objectJson[key].contactNumber
-                .replace(/[^0-9]/g, "");
-                // .substring(1);
+              if (objectJson[key].username) {
+                userName = objectJson[key].username;
+              }
+              else {
+                userName = null;
+              }
+
+              if (objectJson[key].password) {
+                password = objectJson[key].password;
+              }
+              else {
+                password = null;
+              }
+
+              if (objectJson[key].contactNumber) {
+                contactNumber = objectJson[key].contactNumber
+                  .replace(/[^0-9]/g, "")
+                  .substring(1);
+              }
+              else {
+                contactNumber = null;
+              }
+
+              console.log("Contact number is: " + contactNumber);
+
               src.Login(clientData.LoginURL, userName, password);
               src.SupportPage();
               const RSupportNumber = action
@@ -79,6 +121,7 @@ describe("Implementation", () => {
               console.log(" Support Details Validation Completed Successfully");
               browser.reloadSession();
             } catch (exception) {
+              browser.takeScreenshot();
               browser.reloadSession();
               throw exception;
             }
@@ -86,6 +129,7 @@ describe("Implementation", () => {
         });
       });
     } catch (exception) {
+      browser.takeScreenshot();
       browser.reloadSession();
       throw exception;
     }

@@ -9,6 +9,8 @@ const rof = require("../main/rof");
 const constants = require("../constants");
 const launchDate = require("../testdata/generic.json");
 let objectJson = require("./../testdata/expected/resource.json");
+let userName, password, resourceHeadline, resourceBody;
+
 
 
 describe("Implementation", () => {
@@ -32,10 +34,37 @@ describe("Implementation", () => {
         it("Benefits Page", () => {
           if (action.isArray(objectJson[key])) {
             for (arrCount = 0; arrCount < objectJson[key].length; arrCount++) {
-              userName = objectJson[key][arrCount].username;
-              password = objectJson[key][arrCount].password;
-              resourceHeadline = objectJson[key][arrCount].resourceHeadline;
-              resourceBody = objectJson[key][arrCount].resourceBody;
+
+              if (objectJson[key][arrCount].username) {
+                userName = objectJson[key][arrCount].username;
+              }
+              else {
+                userName = null;
+              }
+
+              if (objectJson[key][arrCount].password) {
+                password = objectJson[key][arrCount].password;
+              }
+              else {
+                password = null;
+              }
+
+              if (objectJson[key][arrCount].resourceHeadline) {
+                resourceHeadline = objectJson[key][arrCount].resourceHeadline
+              }
+              else {
+                resourceHeadline = null;
+              }
+
+              if (objectJson[key][arrCount].resourceBody) {
+                resourceBody = objectJson[key][arrCount].resourceBody
+              }
+              else {
+                resourceBody = null;
+              }
+
+              console.log("Resource page details are: " + resourceHeadline + " and " + resourceBody);
+
               try {
                 if (resourceHeadline === null) {
                   //Rally UI Validation
@@ -76,17 +105,43 @@ describe("Implementation", () => {
                   browser.reloadSession();
                 }
               } catch (exception) {
+                browser.takeScreenshot();
                 browser.reloadSession();
                 throw exception;
               }
             }
           } else {
-            var userName = objectJson[key].username;
-            var password = objectJson[key].password;
-            var resourceHeadline = objectJson[key].resourceHeadline;
-            var resourceBody = objectJson[key].resourceBody;
-            console.log("resouce headline =" + resourceHeadline)
-            console.log(userName);
+
+            if (objectJson[key].username) {
+              userName = objectJson[key].username;
+            }
+            else {
+              userName = null;
+            }
+
+            if (objectJson[key].password) {
+              password = objectJson[key].password;
+            }
+            else {
+              password = null;
+            }
+
+            if (objectJson[key].resourceHeadline) {
+              resourceHeadline = objectJson[key].resourceHeadline
+            }
+            else {
+              resourceHeadline = null;
+            }
+
+            if (objectJson[key].resourceBody) {
+              resourceBody = objectJson[key].resourceBody
+            }
+            else {
+              resourceBody = null;
+            }
+
+            console.log("Resource page details are: " + resourceHeadline + " and " + resourceBody);
+
             try {
               if (resourceHeadline === null) {
                 //Rally UI Validation
@@ -127,6 +182,7 @@ describe("Implementation", () => {
                 browser.reloadSession();
               }
             } catch (exception) {
+              browser.takeScreenshot();
               browser.reloadSession();
               throw exception;
             }
@@ -134,6 +190,7 @@ describe("Implementation", () => {
         });
       });
     } catch (exception) {
+      browser.takeScreenshot();
       browser.reloadSession();
       throw exception;
     }

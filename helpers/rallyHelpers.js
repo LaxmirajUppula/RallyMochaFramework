@@ -151,18 +151,6 @@ class rallyUtil {
 
         browser.setTimeout({ pageLoad: 50000 });
 
-        // action.doSetValue($(SFPage.search), clientImp);
-
-        // browser.setTimeout({ 'pageLoad': 50000 })
-        // browser.pause(3000);
-
-        // action.doClick($(SFPage.searchBtn));
-
-        // console.log("Client Implementation Name: " + clientImp);
-        // browser.setTimeout({ 'implicit': 5000 })
-
-        // $(`//a[normalize-space()= "${clientImp}"]`).click();
-
         action.doSetValue($(SFPage.search), clientImp);
 
         action.doClick($(SFPage.searchBtn));
@@ -182,65 +170,88 @@ class rallyUtil {
             $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
           );
         } else {
-          clientImp = clientImp.replace(
-            generic.launchDate,
+          try {
+            clientImp = clientImp.replace(
+              generic.launchDate,
 
-            generic.launchDateOther
-          );
+              generic.launchDateOther
+            );
 
-          console.log("New Imp Name : " + clientImp);
+            console.log("New Imp Name : " + clientImp);
 
-          action.doSetValue($(SFPage.search), clientImp);
+            action.doSetValue($(SFPage.search), clientImp);
 
-          action.doClick($(SFPage.searchBtn));
+            action.doClick($(SFPage.searchBtn));
 
-          action.doClick(
-            $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
-          );
+            action.doClick(
+              $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
+            );
+          }
+          catch (exception) {
+            browser.takeScreenshot();
+            console.log("No search result for client: " + key + " with error code: " + exception);
+            continue;
+          }
+
         }
         if (scenario === "support") {
-          console.log("Inside support");
-          action.doWaitForElement($(SFPage.customerSupportNumber));
-          $(SFPage.customerSupportNumber).scrollIntoView();
-          const SFCustomCustomerSupportNumber = action.doGetText(
-            $(SFPage.customCustomerSN)).replace(/[^0-9]/g, "");
-          console.log(
-            "Custom Number is : " + SFCustomCustomerSupportNumber
-          );
-          browser.takeScreenshot();
-          if (SFCustomCustomerSupportNumber === "") {
-            console.log("Inside if block");
-            CustomerSupportNumber = action
-              .doGetText($(SFPage.customerSupportNumber))
-              .replace(/[^0-9]/g, "")
-              .slice(1);
-          } else {
-            CustomerSupportNumber = action
-              .doGetText($(SFPage.customCustomerSN))
-              .replace(/[^0-9]/g, "");
-          }
-          console.log(
-            "customer support number is : " + CustomerSupportNumber
-          );
-        } else {
-          const CustomResoucePageChkBox = SFPage.customResoursePage;
-          action.doWaitForElement($(CustomResoucePageChkBox));
-          $(CustomResoucePageChkBox).scrollIntoView();
-          browser.takeScreenshot();
-          const check = $(CustomResoucePageChkBox)
-            .getAttribute("title")
-            .toLowerCase();
-          if (check === "checked") {
-            action.doWaitForElement($(SFPage.resourcePageRequirement));
-            action.doClick($(SFPage.resourcePageRequirement));
-            action.doWaitForElement($(SFPage.resourcePageHeadline));
-            Headline = action.doGetText($(SFPage.resourcePageHeadline));
-            BodyText = action.doGetText($(SFPage.resourcePageBodyText));
+          try {
+            console.log("Inside support");
+            action.doWaitForElement($(SFPage.customerSupportNumber));
+            $(SFPage.customerSupportNumber).scrollIntoView();
+            const SFCustomCustomerSupportNumber = action.doGetText(
+              $(SFPage.customCustomerSN)).replace(/[^0-9]/g, "");
+            console.log(
+              "Custom Number is : " + SFCustomCustomerSupportNumber
+            );
             browser.takeScreenshot();
-          } else {
-            Headline = null;
-            BodyText = null;
+            if (SFCustomCustomerSupportNumber === "") {
+              console.log("Inside if block");
+              CustomerSupportNumber = action
+                .doGetText($(SFPage.customerSupportNumber))
+                .replace(/[^0-9]/g, "")
+                .slice(1);
+            } else {
+              CustomerSupportNumber = action
+                .doGetText($(SFPage.customCustomerSN))
+                .replace(/[^0-9]/g, "");
+            }
+            console.log(
+              "customer support number is : " + CustomerSupportNumber
+            );
+          } catch (exception) {
+            browser.takeScreenshot();
+            console.log("Issue with support data for client: " + key + " with error code: " + exception);
+            continue;
           }
+        } else {
+          try {
+            const CustomResoucePageChkBox = SFPage.customResoursePage;
+            action.doWaitForElement($(CustomResoucePageChkBox));
+            $(CustomResoucePageChkBox).scrollIntoView();
+            browser.takeScreenshot();
+            const check = $(CustomResoucePageChkBox)
+              .getAttribute("title")
+              .toLowerCase();
+            if (check === "checked") {
+              action.doWaitForElement($(SFPage.resourcePageRequirement));
+              action.doClick($(SFPage.resourcePageRequirement));
+              action.doWaitForElement($(SFPage.resourcePageHeadline));
+              Headline = action.doGetText($(SFPage.resourcePageHeadline));
+              BodyText = action.doGetText($(SFPage.resourcePageBodyText));
+              browser.takeScreenshot();
+            } else {
+              Headline = null;
+              BodyText = null;
+            }
+          }
+          catch (exception)
+          {
+            browser.takeScreenshot();
+            console.log("Issue with resource data for client: " + key + " with error code: " + exception);
+            continue;
+          }
+
         }
         if (this.isArray(jsonObj[key])) {
           for (let arrCount = 0; arrCount < jsonObj[key].length; arrCount++) {
@@ -261,9 +272,8 @@ class rallyUtil {
         }
       }
       catch (exception) {
-        // browser.reloadSession();
-        // rof.loginSalesforce(constants.username, constants.password);
-        console.log("Issue with fetching data from Salesforce for client: " + key)
+        browser.takeScreenshot();
+        console.log("Issue with fetching data from Salesforce for client: " + key + " with error code: " + exception);
         throw exception;
       }
 

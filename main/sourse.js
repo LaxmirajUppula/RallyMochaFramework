@@ -19,6 +19,7 @@ class buildPage {
         false,
         "The email/password combination you entered is not valid. Please try again."
       );
+      browser.takeScreenshot();
     }
   }
 
