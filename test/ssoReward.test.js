@@ -435,6 +435,7 @@ describe("Implementation", () => {
                           JSON.stringify(objectJson[key][activities])
                       );
                     } catch {
+                      browser.takeScreenshot();
                       console.log("Selectors are not as per expectation");
                     }
 
@@ -500,6 +501,7 @@ describe("Implementation", () => {
                           break;
                       }
                     } catch (e1) {
+                      browser.takeScreenshot();
                       console.log("CTA mismatch" + e1);
                       browser.url(clientData.BSLogout);
                       handles = browser.getWindowHandles();
@@ -535,6 +537,7 @@ describe("Implementation", () => {
             }
           } catch (exception) {
             //throw exception;
+            browser.takeScreenshot();
             console.log(
               "Issue with Implementation and the error is " + exception
             );
@@ -557,6 +560,7 @@ describe("Implementation", () => {
       rallyUtil.writeToFile(outPath, objectJson);
     });
   } catch (exception) {
+    browser.takeScreenshot();
     console.log("Issue with required identifiers" + exception);
     browser.url(clientData.BSLogout);
     handles = browser.getWindowHandles();
