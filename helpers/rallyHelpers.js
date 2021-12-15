@@ -152,7 +152,7 @@ class rallyUtil {
         browser.setTimeout({ pageLoad: 50000 });
 
         action.doSetValue($(SFPage.search), clientImp);
-
+        browser.pause(3000);
         action.doClick($(SFPage.searchBtn));
 
         browser.setTimeout({ implicit: 20000 });
@@ -209,8 +209,7 @@ class rallyUtil {
               console.log("Inside if block");
               CustomerSupportNumber = action
                 .doGetText($(SFPage.customerSupportNumber))
-                .replace(/[^0-9]/g, "")
-                .slice(1);
+                .replace(/[^0-9]/g, "").substring(1);
             } else {
               CustomerSupportNumber = action
                 .doGetText($(SFPage.customCustomerSN))

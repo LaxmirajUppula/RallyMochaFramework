@@ -98,8 +98,7 @@ describe("Implementation", () => {
 
               if (objectJson[key].contactNumber) {
                 contactNumber = objectJson[key].contactNumber
-                  .replace(/[^0-9]/g, "")
-                  .substring(1);
+                  .replace(/[^0-9]/g, "");
               }
               else {
                 contactNumber = null;
