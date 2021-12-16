@@ -453,7 +453,15 @@ describe("Implementation", () => {
                       var phoneNum = $(
                         "div[data-testid='" + RewardActivityID + "'] button"
                       ).getText();
-                    } else {
+                    } else if (CTA = "SSO"){
+                      $("div[class='sc-hiKfjK eTyHFg column is-8-desktop is-12-touch'] button").click();
+                      browser.switchWindow("Rally Health")
+                      $("#continue-button").click();
+                      browser.pause(5000);
+                      var valUrl = browser.getUrl();
+                      browser.url(clientData.BSRewardPage);
+                    }
+                    else {
                       $(
                         "div[data-testid='" + RewardActivityID + "'] button"
                       ).click();
