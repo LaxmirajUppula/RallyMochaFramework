@@ -220,8 +220,8 @@ describe("Implementation", () => {
                       expect($(rofPage.RewardActivityID)).toExist();
                       RewardActivityID = action.doGetText(
                         $(rofPage.RewardActivityID)
-                      );
-
+                      ).split('\n')[0];
+                        console.log("Reward Activity Id is : "+ RewardActivityID)
                       expect($(rofPage.CTAValue)).toExist();
                       CTAValue = action.doGetText($(rofPage.CTAValue));
 

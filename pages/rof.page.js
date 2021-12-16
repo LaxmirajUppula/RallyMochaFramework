@@ -16,6 +16,6 @@ module.exports = {
   rewardPlanDesignsHeaderLink : "*=Reward Plan Designs[",
   CTA                         : "//*[@id='00N2R000007NnZL_ileinner']",
   CTAValue                    : "div[id='00N2R000007NnZK_ileinner']",
-  RewardActivityID            : "#CF00N44000006b0LH_ileinner",
+  RewardActivityID            : "//div[@id='00N44000006b0LW_ileinner']",
   checkboxCopyTemplate        : "//img[@id='00N44000006sSXC_chkbox']"
 };
