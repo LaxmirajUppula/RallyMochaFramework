@@ -94,51 +94,29 @@ class rallyUtil {
     password = "password";
     rewardPlanName = "rewardPlanName";
 
-    console.log("All files" + clientFiles);
-
     clientFiles.forEach(function (file) {
       excelUtil.excel_getTableRows(
         dirPath + "/" + file,
         "Sheet1",
         function (results) {
-          let custLegalName;
-          let custEmail;
-          let custPassword;
-
           if (flag != "with") {
-            custLegalName = results[0].CUST_LEG_NM;
-            custEmail = results[0].RALLY_EMAIL;
-            custPassword = results[0].RALLY_PASSWORD;
-            if (custLegalName) {
-              if (custEmail || custPassword) {
-                sfExpectation[results[0].CUST_LEG_NM] = {
-                  [username]: results[0].RALLY_EMAIL,
-                  [password]: results[0].RALLY_PASSWORD,
-                };
-              }
-            }
+            sfExpectation[results[0].CUST_LEG_NM] = {
+              [username]: results[0].RALLY_EMAIL,
+              [password]: results[0].RALLY_PASSWORD,
+            };
           } else {
             results.forEach(function (record) {
-              custLegalName = record.CUST_LEG_NM;
-              custEmail = record.RALLY_EMAIL;
-              custPassword = record.RALLY_PASSWORD;
-
-              if (!sfExpectation[custLegalName]) {
-                if (custLegalName) {
-                  sfExpectation[custLegalName] = [];
-                }
+              let customerName = record.CUST_LEG_NM;
+              if (!sfExpectation[customerName]) {
+                sfExpectation[customerName] = [];
               }
 
               if (flag != "without") {
-                if (custLegalName) {
-                  if (custEmail || custPassword) {
-                    sfExpectation[custLegalName].push({
-                      [username]: custEmail,
-                      [password]: custPassword,
-                      [rewardPlanName]: record.REWARDS_PLAN_NAME,
-                    });
-                  }
-                }
+                sfExpectation[customerName].push({
+                  [username]: record.RALLY_EMAIL,
+                  [password]: record.RALLY_PASSWORD,
+                  [rewardPlanName]: record.REWARDS_PLAN_NAME,
+                });
               }
             });
           }
