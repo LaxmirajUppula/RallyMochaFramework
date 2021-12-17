@@ -25,6 +25,7 @@ class rallyUtil {
 
     this.writeToFile(outPath + "/support.json", objUserData);
     this.writeToFile(outPath + "/resource.json", objUserData);
+    this.writeToFile(outPath + "/sso.json", objUserData);
   }
 
   /***************************************************************************************/
@@ -45,6 +46,14 @@ class rallyUtil {
         scenario
       );
       this.writeToFile(outPath + "/support.json", objClientData);
+    } else if (scenario === "reward") {
+      objJson = require("./../testdata/expected/sso.json");
+      objClientData = this.createClientData(
+        JSON.parse(JSON.stringify(objJson)),
+        releaseDate_SF,
+        scenario
+      );
+      this.writeToFile(outPath + "/sso.json", objClientData);
     } else {
       objJson = require("./../testdata/expected/resource.json");
       objClientData = this.createClientData(
@@ -79,9 +88,11 @@ class rallyUtil {
     let sfExpectation = {};
     let username;
     let password;
+    let rewardPlanName;
 
     username = "username";
     password = "password";
+    rewardPlanName = "rewardPlanName";
 
     console.log("All files" + clientFiles);
 
@@ -124,6 +135,7 @@ class rallyUtil {
                     sfExpectation[custLegalName].push({
                       [username]: custEmail,
                       [password]: custPassword,
+                      [rewardPlanName]: record.REWARDS_PLAN_NAME,
                     });
                   }
                 }
@@ -186,30 +198,33 @@ class rallyUtil {
             action.doClick(
               $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
             );
-          }
-          catch (exception) {
+          } catch (exception) {
             browser.takeScreenshot();
-            console.log("No search result for client: " + key + " with error code: " + exception);
+            console.log(
+              "No search result for client: " +
+                key +
+                " with error code: " +
+                exception
+            );
             continue;
           }
-
         }
         if (scenario === "support") {
           try {
             console.log("Inside support");
             action.doWaitForElement($(SFPage.customerSupportNumber));
             $(SFPage.customerSupportNumber).scrollIntoView();
-            const SFCustomCustomerSupportNumber = action.doGetText(
-              $(SFPage.customCustomerSN)).replace(/[^0-9]/g, "");
-            console.log(
-              "Custom Number is : " + SFCustomCustomerSupportNumber
-            );
+            const SFCustomCustomerSupportNumber = action
+              .doGetText($(SFPage.customCustomerSN))
+              .replace(/[^0-9]/g, "");
+            console.log("Custom Number is : " + SFCustomCustomerSupportNumber);
             browser.takeScreenshot();
             if (SFCustomCustomerSupportNumber === "") {
               console.log("Inside if block");
               CustomerSupportNumber = action
                 .doGetText($(SFPage.customerSupportNumber))
-                .replace(/[^0-9]/g, "").substring(1);
+                .replace(/[^0-9]/g, "")
+                .substring(1);
             } else {
               CustomerSupportNumber = action
                 .doGetText($(SFPage.customCustomerSN))
@@ -220,7 +235,12 @@ class rallyUtil {
             );
           } catch (exception) {
             browser.takeScreenshot();
-            console.log("Issue with support data for client: " + key + " with error code: " + exception);
+            console.log(
+              "Issue with support data for client: " +
+                key +
+                " with error code: " +
+                exception
+            );
             continue;
           }
         } else {
@@ -243,14 +263,16 @@ class rallyUtil {
               Headline = null;
               BodyText = null;
             }
-          }
-          catch (exception)
-          {
+          } catch (exception) {
             browser.takeScreenshot();
-            console.log("Issue with resource data for client: " + key + " with error code: " + exception);
+            console.log(
+              "Issue with resource data for client: " +
+                key +
+                " with error code: " +
+                exception
+            );
             continue;
           }
-
         }
         if (this.isArray(jsonObj[key])) {
           for (let arrCount = 0; arrCount < jsonObj[key].length; arrCount++) {
@@ -269,13 +291,16 @@ class rallyUtil {
             jsonObj[key][resourceBody] = BodyText;
           }
         }
-      }
-      catch (exception) {
+      } catch (exception) {
         browser.takeScreenshot();
-        console.log("Issue with fetching data from Salesforce for client: " + key + " with error code: " + exception);
+        console.log(
+          "Issue with fetching data from Salesforce for client: " +
+            key +
+            " with error code: " +
+            exception
+        );
         throw exception;
       }
-
     }
     return jsonObj;
   }

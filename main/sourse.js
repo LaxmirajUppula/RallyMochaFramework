@@ -58,5 +58,16 @@ class buildPage {
     action.doWaitForElement($(supportPage.contactSupportBtn));
     action.doClick($(supportPage.contactSupportBtn));
   }
+
+  UILogin(loginUrl, email, password){
+    browser.newWindow(loginUrl);
+    action.doSetValue(
+      $(loginPage.email),
+      email
+    );
+    action.doSetValue($(loginPage.password), password);
+    action.doClick($(loginPage.loginBtn));
+    action.doClick($("#rh-header-company-info-image"));
+  }
 }
 module.exports = new buildPage();
