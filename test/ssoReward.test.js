@@ -40,9 +40,8 @@ describe("Implementation", () => {
       rof.loginSalesforce(constants.username, constants.password);
     });
     for (let key in objectJson) {
-      const clientName = JSON.stringify(key).replace(/["]/g, "") +
-      " - " +
-      launchDate.launchDate;
+      const clientName =
+        JSON.stringify(key).replace(/["]/g, "") + " - " + launchDate.launchDate;
       describe(clientName, () => {
         it("SSO", () => {
           try {
@@ -402,9 +401,9 @@ describe("Implementation", () => {
                       // console.log("Call to Action : " + CTA);
                       // console.log("CTA Value : " + CTAValue);
                       // console.log("Reward Activity Id : " + RewardActivityID);
-                      // console.log(
-                      //   "Copy Template Checkbox status is : " + chkCopyTemp
-                      // );
+                      console.log(
+                        "Copy Template Checkbox status is : " + chkCopyTemp
+                      );
 
                       // let activities = "activities";
                       // let ctaAction = "ctaAction";
@@ -450,7 +449,7 @@ describe("Implementation", () => {
                     } else {
                       action.doClick($("=" + RewardPlanName));
                     }
-                    browser.pause(15000);
+                    browser.pause(20000);
                     browser.switchWindow(clientData.BSRewardPage);
                     if ($("a[data-testid='missing-reward']").isExisting()) {
                       action.doClick($("a[data-testid='missing-reward']"));
@@ -462,10 +461,10 @@ describe("Implementation", () => {
                       ).getText();
                     } else if (CTA === "SSO") {
                       $(
-                        "div[class='sc-hiKfjK eTyHFg column is-8-desktop is-12-touch'] button"
+                        "button[class='sc-dlnjPT cuIYFB column is-12-touch has-rds-mt-40 rds-primary-button is-white-labeled-btn is-flex'] span[class='has-rds-mr-8']"
                       ).click();
-                      browser.switchWindow("Rally Health");
-                      $("#continue-button").click();
+                      browser.switchWindow("Redirecting | Rally Health");
+                      $("//a[@id='legal-redirect-link']").click();
                       browser.pause(5000);
                       var valUrl = browser.getUrl();
                       browser.url(clientData.BSRewardPage);
@@ -478,43 +477,78 @@ describe("Implementation", () => {
                       browser.url(clientData.BSRewardPage);
                     }
                     try {
-                      switch (CTA) {
-                        case "Rally Internal Link":
-                          let urlValue = ssoObjectJson[CTAValue];
-                          console.log("Rally Internal Link is : " + urlValue);
-                          assert.equal(
-                            valUrl,
-                            urlValue,
-                            "Requirement mismatch"
-                          );
-                          break;
-                        case "SSO":
-                          let ssoUrlValue = ssoMapingObjectJson[CTAValue];
-                          console.log("SSO to Quest link is : " + ssoUrlValue);
-                          assert.equal(
-                            ssoUrlValue,
-                            valUrl,
-                            "Requirement Mismatch"
-                          );
-                          break;
-                        case "Rally Internal Details Page":
-                          expect(browser).toHaveUrlContaining(RewardActivityID);
-                          break;
-                        case "External URL":
-                          assert.equal(
-                            CTAValue,
-                            valUrl,
-                            "Requirement mismatch"
-                          );
-                          break;
-                        case "Phone":
-                          assert.equal(
-                            CTAValue,
-                            phoneNum,
-                            "Requirement Mismatch"
-                          );
-                        default:
-                          break;
+                      if (chkCopyTemp  !== "Not Checked") {
+                        switch (CTA) {
+                          case "Rally Internal Link":
+                            let urlValue = ssoObjectJson[CTAValue];
+                            console.log("Rally Internal Link is : " + urlValue);
+                            assert.equal(
+                              valUrl,
+                              urlValue,
+                              "Requirement mismatch"
+                            );
+                            break;
+                          case "SSO":
+                            let ssoUrlValue = ssoMapingObjectJson[CTAValue];
+                            console.log(
+                              "SSO to Quest link is : " + ssoUrlValue
+                            );
+                            assert.equal(
+                              ssoUrlValue,
+                              valUrl,
+                              "Requirement Mismatch"
+                            );
+                            break;
+                          case "Rally Internal Details Page":
+                            expect(browser).toHaveUrlContaining(
+                              RewardActivityID
+                            );
+                            break;
+                          case "External URL":
+                            assert.equal(
+                              CTAValue,
+                              valUrl,
+                              "Requirement mismatch"
+                            );
+                            break;
+                          case "Phone":
+                            assert.equal(
+                              CTAValue,
+                              phoneNum,
+                              "Requirement Mismatch"
+                            );
+                          default:
+                            break;
+                        }
+                      } else {
+                        switch (CTA) {
+                          case "SSO":
+                            let ssoUrlValue = ssoMapingObjectJson[CTAValue];
+                            console.log(
+                              "SSO to Quest link is : " + ssoUrlValue
+                            );
+                            assert.equal(
+                              ssoUrlValue,
+                              valUrl,
+                              "Requirement Mismatch"
+                            );
+                            break;
+                          case "External URL":
+                            assert.equal(
+                              CTAValue,
+                              valUrl,
+                              "Requirement mismatch"
+                            );
+                            break;
+                          case "Phone":
+                            assert.equal(
+                              CTAValue,
+                              phoneNum,
+                              "Requirement Mismatch"
+                            );
+                          default:
+                            break;
+                        }
                       }
                     } catch (e1) {
                       browser.takeScreenshot();
@@ -522,8 +556,8 @@ describe("Implementation", () => {
                       //browser.url(clientData.BSLogout);
                       handles = browser.getWindowHandles();
                       if (handles.length > 1) {
-                        browser.switchToWindow(handles[1]);
-                        browser.closeWindow();
+                        // browser.switchToWindow(handles[1]);
+                        // browser.closeWindow();
                         browser.switchToWindow(handles[0]);
                       }
                       //browser.switchWindow(clientData.SFUrl);
