@@ -42,11 +42,29 @@ class buildPage {
     action.doClick($(supportPage.contactSupportBtn));
   }
 
-  // RewardsPage() {
-  //   page.open("https://member.werally.com/home/");
-  //   action.doWaitForElement($(homePage.reward));
-  //   action.doClick($(homePage.reward));
-  //   action.doWaitForElement(rewardsPage.genericButton);
-  // }
+  RewardsPage() {
+    action.doWaitForElement($(homePage.reward));
+    action.doClick($(homePage.reward));
+  }
+
+  UILogin(loginUrl, email, password){
+    browser.newWindow(loginUrl);
+    action.doSetValue(
+      $(loginPage.email),
+      email
+    );
+    action.doSetValue($(loginPage.password), password);
+    action.doClick($(loginPage.loginBtn));
+    browser.setTimeout({ implicit: 4000 });
+    let alertFlag = $(loginPage.alertBanner).isDisplayed();
+    if (alertFlag) {
+      assert.equal(
+        alertFlag,
+        false,
+        "The email/password combination you entered is not valid. Please try again."
+      );
+    }
+    action.doClick($("#rh-header-company-info-image"));
+  }
 }
 module.exports = new buildPage();

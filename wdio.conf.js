@@ -1,4 +1,5 @@
 const config = require("./config");
+const rallyUtil = require("./helpers/rallyHelpers");
 exports.config = {
   //
   // ====================
@@ -61,11 +62,11 @@ exports.config = {
       maxInstances: 5,
       //
       browserName: "chrome",
-      'goog:chromeOptions':{
-        args:['--incognito']
+      "goog:chromeOptions": {
+        args: ["--incognito"],
       },
       acceptInsecureCerts: true,
-      
+
       // If outputDir is provided WebdriverIO can capture driver session logs
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -121,14 +122,17 @@ exports.config = {
   // commands. Instead, they hook themselves up into the test process.
   // services: ["chromedriver"],
   services: [
-    ['chromedriver', {
-        logFileName: 'wdio-chromedriver.log', // default
-        outputDir: 'driver-logs', // overwrites the config.outputDir
-        args: ['--silent'],
+    [
+      "chromedriver",
+      {
+        logFileName: "wdio-chromedriver.log", // default
+        outputDir: "driver-logs", // overwrites the config.outputDir
+        args: ["--silent"],
         port: 9595,
         path: "/node_modules/chromedriver/lib/chromedriver/chromedriver",
-        hostname : "localhost"
-    }]
+        hostname: "localhost",
+      },
+    ],
   ],
 
   // Framework you want to run your specs with.
@@ -152,11 +156,16 @@ exports.config = {
   // The only one supported by default is 'dot'
   // see also: https://webdriver.io/docs/dot-reporter
   reporters: ["spec"],
-  reporters: [['allure', {
-    outputDir: 'allure-results',
-    disableWebdriverStepsReporting: true,
-    disableWebdriverScreenshotsReporting: false,
-}]],
+  reporters: [
+    [
+      "allure",
+      {
+        outputDir: "allure-results",
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
+      },
+    ],
+  ],
   //
   // Options to be passed to Mocha.
   // See the full list at http://mochajs.org/
@@ -179,6 +188,9 @@ exports.config = {
    */
   // onPrepare: function (config, capabilities) {
   // },
+  onPrepare: function (config, capabilities) {
+    rallyUtil.saveUserDetailsFromInputFiles("with");
+  },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -230,7 +242,7 @@ exports.config = {
    */
   // beforeTest: function (test, context) {
   // },
-  beforeTest: function() {
+  beforeTest: function () {
     const chai = require("chai");
     const chaiWebdriver = require("chai-webdriverio").default;
     chai.use(chaiWebdriver(browser));
@@ -256,7 +268,7 @@ exports.config = {
    */
   // afterTest: function(test, context, { error, result, duration, passed, retries }) {
   // },
-  afterTest: function(
+  afterTest: function (
     test,
     context,
     { error, result, duration, passed, retries }

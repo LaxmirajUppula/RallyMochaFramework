@@ -11,5 +11,11 @@ module.exports = {
   customResoursePage    : "//img[@id='00N2R000007NnYt_chkbox']",
   resourcePageRequirement: "//a[contains(text(),'Resource Page -')]",
   resourcePageHeadline    : "//div[@id='00NE0000006Km7g_ileinner']",
-  resourcePageBodyText    : "//div[@id='00NE0000006Km7h_ileinner']"
+  resourcePageBodyText    : "//div[@id='00NE0000006Km7h_ileinner']",
+  clientRequirementsFormLink : "div[id='00N2R0000072Hz8_ileinner']",
+  rewardPlanDesignsHeaderLink : "*=Reward Plan Designs[",
+  CTA                         : "//*[@id='00N2R000007NnZL_ileinner']",
+  CTAValue                    : "div[id='00N2R000007NnZK_ileinner']",
+  RewardActivityID            : "//div[@id='00N44000006b0LW_ileinner']",
+  checkboxCopyTemplate        : "//img[@id='00N44000006sSXC_chkbox']"
 };
