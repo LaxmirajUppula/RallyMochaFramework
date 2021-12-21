@@ -9,6 +9,7 @@ const loginPage = require("../pages/login.page");
 const supportPage = require("../pages/support.page");
 const launchDate = require("../testdata/generic.json");
 const rofPage = require("../pages/rof.page");
+const homePage = require("../pages/home.page")
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
@@ -123,7 +124,7 @@ describe("Implementation", () => {
                 ActivityName.push(customActivityName);
               }
               console.log(ActivityName);
-              // $("div[class='ptBreadcrumb'] a").click();
+              $("div[class='ptBreadcrumb'] a").click();
             } else {
               console.log("No Custom reward Activities");
             }
@@ -450,7 +451,7 @@ describe("Implementation", () => {
                       action.doClick($("=" + RewardPlanName));
                     }
                     browser.pause(20000);
-                    browser.switchWindow(clientData.BSRewardPage);
+                    browser.switchWindow("Rewards");
                     if ($("a[data-testid='missing-reward']").isExisting()) {
                       action.doClick($("a[data-testid='missing-reward']"));
                     }
@@ -477,7 +478,7 @@ describe("Implementation", () => {
                       browser.url(clientData.BSRewardPage);
                     }
                     try {
-                      if (chkCopyTemp  !== "Not Checked") {
+                      if (chkCT  === "Not Checked") {
                         switch (CTA) {
                           case "Rally Internal Link":
                             let urlValue = ssoObjectJson[CTAValue];
@@ -591,7 +592,9 @@ describe("Implementation", () => {
             console.log(
               "Issue with Implementation and the error is " + exception
             );
-            //browser.url(clientData.BSLogout);
+            if($(homePage.myprofile).isExisting()){
+            browser.url(clientData.BSLogout);
+            }
             handles = browser.getWindowHandles();
             if (handles.length > 1) {
               browser.switchToWindow(handles[1]);
@@ -612,7 +615,7 @@ describe("Implementation", () => {
   } catch (exception) {
     browser.takeScreenshot();
     console.log("Issue with required identifiers" + exception);
-    //browser.url(clientData.BSLogout);
+    browser.url(clientData.BSLogout);
     handles = browser.getWindowHandles();
     if (handles.length > 1) {
       browser.switchToWindow(handles[1]);
@@ -620,6 +623,6 @@ describe("Implementation", () => {
       browser.switchToWindow(handles[0]);
     }
     throw exception;
-    //browser.switchWindow(clientData.SFUrl);
+    browser.switchWindow(clientData.SFUrl);
   }
 });
