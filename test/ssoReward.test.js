@@ -123,8 +123,11 @@ describe("Implementation", () => {
                 ActivityName.push(customActivityName);
               }
               console.log(ActivityName);
-              // $("div[class='ptBreadcrumb'] a").click();
-            } else {
+              let elemSFHome = $("div[class='ptBreadcrumb'] a").isExisting();
+              if (elemSFHome) {
+                $("div[class='ptBreadcrumb'] a").click();
+              }
+              } else {
               console.log("No Custom reward Activities");
             }
 
@@ -196,7 +199,7 @@ describe("Implementation", () => {
                   }
 
                   // *********************   UI ********************************************
-                  src.UILogin(clientData.BlueSteelURL, userName, password);
+                  src.UILogin(clientData.BSLogout, userName, password);
                   src.RewardsPage();
                   browser.switchWindow(clientData.SFUrl);
 
@@ -461,11 +464,15 @@ describe("Implementation", () => {
                       ).getText();
                     } else if (CTA === "SSO") {
                       $(
+                        "div[data-testid='" + RewardActivityID + "'] button"
+                      ).click();
+                      $(
                         "button[class='sc-dlnjPT cuIYFB column is-12-touch has-rds-mt-40 rds-primary-button is-white-labeled-btn is-flex'] span[class='has-rds-mr-8']"
                       ).click();
                       browser.switchWindow("Redirecting | Rally Health");
                       $("//a[@id='legal-redirect-link']").click();
                       browser.pause(5000);
+                      browser.takeScreenshot();
                       var valUrl = browser.getUrl();
                       browser.url(clientData.BSRewardPage);
                     } else {
@@ -477,7 +484,7 @@ describe("Implementation", () => {
                       browser.url(clientData.BSRewardPage);
                     }
                     try {
-                      if (chkCopyTemp  !== "Not Checked") {
+                      if (chkCT  !== "Not Checked") {
                         switch (CTA) {
                           case "Rally Internal Link":
                             let urlValue = ssoObjectJson[CTAValue];
