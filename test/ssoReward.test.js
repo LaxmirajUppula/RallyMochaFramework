@@ -116,6 +116,7 @@ describe("Implementation", () => {
                   '//*[@id="' + customActivitiesBody + '"]/table/tbody/tr[';
                 var a_xpath = "]/th/a";
               }
+              ActivityName = [];
               for (let j = 2; j <= customRewardActivities.length; j++) {
                 const customActivityName = action.doGetText(
                   $(b_xpath + j + a_xpath)
@@ -127,7 +128,7 @@ describe("Implementation", () => {
               if (elemSFHome) {
                 $("div[class='ptBreadcrumb'] a").click();
               }
-              } else {
+            } else {
               console.log("No Custom reward Activities");
             }
 
@@ -442,9 +443,10 @@ describe("Implementation", () => {
                         "The new object is: " +
                           JSON.stringify(objectJson[key][activities])
                       );
-                    } catch {
+                    } catch (exception){
                       browser.takeScreenshot();
                       console.log("Selectors are not as per expectation");
+                      throw exception;
                     }
 
                     if (actLength > 5) {
@@ -462,6 +464,7 @@ describe("Implementation", () => {
                       var phoneNum = $(
                         "div[data-testid='" + RewardActivityID + "'] button"
                       ).getText();
+                      browser.takeScreenshot();
                     } else if (CTA === "SSO") {
                       $(
                         "div[data-testid='" + RewardActivityID + "'] button"
@@ -479,12 +482,42 @@ describe("Implementation", () => {
                       $(
                         "div[data-testid='" + RewardActivityID + "'] button"
                       ).click();
+                      browser.takeScreenshot();
                       browser.pause(5000);
                       var valUrl = browser.getUrl();
                       browser.url(clientData.BSRewardPage);
                     }
                     try {
-                      if (chkCT  !== "Not Checked") {
+                      if (chkCT === "Not Checked") {
+                        switch (CTA) {
+                          case "SSO":
+                            let ssoUrlValue = ssoMapingObjectJson[CTAValue];
+                            console.log(
+                              "SSO to Quest link is : " + ssoUrlValue
+                            );
+                            assert.equal(
+                              ssoUrlValue,
+                              valUrl,
+                              "Requirement Mismatch"
+                            );
+                            break;
+                          case "External URL":
+                            assert.equal(
+                              CTAValue,
+                              valUrl,
+                              "Requirement mismatch"
+                            );
+                            break;
+                          case "Phone":
+                            assert.equal(
+                              CTAValue,
+                              phoneNum,
+                              "Requirement Mismatch"
+                            );
+                          default:
+                            break;
+                        }
+                      } else {
                         switch (CTA) {
                           case "Rally Internal Link":
                             let urlValue = ssoObjectJson[CTAValue];
@@ -509,35 +542,6 @@ describe("Implementation", () => {
                           case "Rally Internal Details Page":
                             expect(browser).toHaveUrlContaining(
                               RewardActivityID
-                            );
-                            break;
-                          case "External URL":
-                            assert.equal(
-                              CTAValue,
-                              valUrl,
-                              "Requirement mismatch"
-                            );
-                            break;
-                          case "Phone":
-                            assert.equal(
-                              CTAValue,
-                              phoneNum,
-                              "Requirement Mismatch"
-                            );
-                          default:
-                            break;
-                        }
-                      } else {
-                        switch (CTA) {
-                          case "SSO":
-                            let ssoUrlValue = ssoMapingObjectJson[CTAValue];
-                            console.log(
-                              "SSO to Quest link is : " + ssoUrlValue
-                            );
-                            assert.equal(
-                              ssoUrlValue,
-                              valUrl,
-                              "Requirement Mismatch"
                             );
                             break;
                           case "External URL":
