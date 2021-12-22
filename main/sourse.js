@@ -47,7 +47,6 @@ class buildPage {
     page.open("https://member.werally.com/home/");
     action.doWaitForElement($(homePage.reward));
     action.doClick($(homePage.reward));
-    action.doWaitForElement(rewardsPage.genericButton);
   }
 
   CustomSupportPage() {
