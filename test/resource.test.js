@@ -33,82 +33,80 @@ describe("Implementation", () => {
       describe(clientName, () => {
         it("Benefits Page", () => {
           if (action.isArray(objectJson[key])) {
-            for (arrCount = 0; arrCount < objectJson[key].length; arrCount++) {
 
-              if (objectJson[key][arrCount].username) {
-                userName = objectJson[key][arrCount].username;
-              }
-              else {
-                userName = null;
-              }
+            if (objectJson[key][0].username) {
+              userName = objectJson[key][0].username;
+            }
+            else {
+              userName = null;
+            }
 
-              if (objectJson[key][arrCount].password) {
-                password = objectJson[key][arrCount].password;
-              }
-              else {
-                password = null;
-              }
+            if (objectJson[key][0].password) {
+              password = objectJson[key][0].password;
+            }
+            else {
+              password = null;
+            }
 
-              if (objectJson[key][arrCount].resourceHeadline) {
-                resourceHeadline = objectJson[key][arrCount].resourceHeadline
-              }
-              else {
-                resourceHeadline = null;
-              }
+            if (objectJson[key][0].resourceHeadline) {
+              resourceHeadline = objectJson[key][0].resourceHeadline
+            }
+            else {
+              resourceHeadline = null;
+            }
 
-              if (objectJson[key][arrCount].resourceBody) {
-                resourceBody = objectJson[key][arrCount].resourceBody
-              }
-              else {
-                resourceBody = null;
-              }
+            if (objectJson[key][0].resourceBody) {
+              resourceBody = objectJson[key][0].resourceBody
+            }
+            else {
+              resourceBody = null;
+            }
 
-              console.log("Resource page details are: " + resourceHeadline + " and " + resourceBody);
+            console.log("Resource page details are: " + resourceHeadline + " and " + resourceBody);
 
-              try {
-                if (resourceHeadline === null) {
-                  //Rally UI Validation
-                  src.Login(clientData.LoginURL, userName, password);
-                  src.ResourcePage();
-                  browser.takeScreenshot();
-                  console.log(
-                    clientName +
-                    " Benefits Page Validation Completed Successfully"
-                  );
-                  browser.reloadSession();
-                } else {
-                  console.log("Client has Custom resource Page");
-                  src.Login(clientData.LoginURL, userName, password);
-                  src.ResourcePage();
-                  action.doWaitForElement($(ResourcePage.headline));
-                  const ResourcePageHeadline = action.doGetText(
-                    $(ResourcePage.headline)
-                  );
-                  const ResourcePageBodyText = action.doGetText(
-                    $(ResourcePage.bodytext)
-                  );
-                  browser.takeScreenshot();
-                  assert.equal(
-                    resourceHeadline,
-                    ResourcePageHeadline,
-                    "Invalid page Headline"
-                  );
-                  assert.equal(
-                    resourceBody,
-                    ResourcePageBodyText,
-                    "Invalid page Body Text"
-                  );
-                  console.log(
-                    clientName +
-                    " Benefits Page Validation Completed Successfully"
-                  );
-                  browser.reloadSession();
-                }
-              } catch (exception) {
+            try {
+              if (resourceHeadline === null) {
+                //Rally UI Validation
+                src.Login(clientData.LoginURL, userName, password);
+                src.ResourcePage();
                 browser.takeScreenshot();
+                console.log(
+                  clientName +
+                  " Benefits Page Validation Completed Successfully"
+                );
                 browser.reloadSession();
-                throw exception;
+              } else {
+                console.log("Client has Custom resource Page");
+                src.Login(clientData.LoginURL, userName, password);
+                src.ResourcePage();
+                action.doWaitForElement($(ResourcePage.headline));
+                const ResourcePageHeadline = action.doGetText(
+                  $(ResourcePage.headline)
+                );
+                const ResourcePageBodyText = action.doGetText(
+                  $(ResourcePage.bodytext)
+                );
+                browser.takeScreenshot();
+                assert.equal(
+                  resourceHeadline,
+                  ResourcePageHeadline,
+                  "Invalid page Headline"
+                );
+                assert.equal(
+                  resourceBody,
+                  ResourcePageBodyText,
+                  "Invalid page Body Text"
+                );
+                console.log(
+                  clientName +
+                  " Benefits Page Validation Completed Successfully"
+                );
+                browser.reloadSession();
               }
+            } catch (exception) {
+              browser.takeScreenshot();
+              browser.reloadSession();
+              throw exception;
             }
           } else {
 

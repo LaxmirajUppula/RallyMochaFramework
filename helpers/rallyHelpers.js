@@ -156,9 +156,22 @@ class rallyUtil {
         // assert.equal(impElement, true, "Implementation Name format mismatch");
 
         if (impElement) {
-          action.doClick(
-            $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
-          );
+          try {
+            action.doClick(
+              $("//*[@id='Milestone1_Project__c_body']/table/tbody/tr[2]/th/a")
+            );
+          }
+          catch (exception) {
+            browser.takeScreenshot();
+            console.log(
+              "No search result for client: " +
+              key +
+              " with error code: " +
+              exception
+            );
+            continue;
+          }
+
         } else {
           try {
             clientImp = clientImp.replace(
@@ -180,9 +193,9 @@ class rallyUtil {
             browser.takeScreenshot();
             console.log(
               "No search result for client: " +
-                key +
-                " with error code: " +
-                exception
+              key +
+              " with error code: " +
+              exception
             );
             continue;
           }
@@ -215,9 +228,9 @@ class rallyUtil {
             browser.takeScreenshot();
             console.log(
               "Issue with support data for client: " +
-                key +
-                " with error code: " +
-                exception
+              key +
+              " with error code: " +
+              exception
             );
             continue;
           }
@@ -245,21 +258,19 @@ class rallyUtil {
             browser.takeScreenshot();
             console.log(
               "Issue with resource data for client: " +
-                key +
-                " with error code: " +
-                exception
+              key +
+              " with error code: " +
+              exception
             );
             continue;
           }
         }
         if (this.isArray(jsonObj[key])) {
-          for (let arrCount = 0; arrCount < jsonObj[key].length; arrCount++) {
-            if (scenario === "support") {
-              jsonObj[key][arrCount][contactNumber] = CustomerSupportNumber;
-            } else {
-              jsonObj[key][arrCount][resourceHeadline] = Headline;
-              jsonObj[key][arrCount][resourceBody] = BodyText;
-            }
+          if (scenario === "support") {
+            jsonObj[key][0][contactNumber] = CustomerSupportNumber;
+          } else {
+            jsonObj[key][0][resourceHeadline] = Headline;
+            jsonObj[key][0][resourceBody] = BodyText;
           }
         } else {
           if (scenario === "support") {
@@ -273,9 +284,9 @@ class rallyUtil {
         browser.takeScreenshot();
         console.log(
           "Issue with fetching data from Salesforce for client: " +
-            key +
-            " with error code: " +
-            exception
+          key +
+          " with error code: " +
+          exception
         );
         throw exception;
       }
