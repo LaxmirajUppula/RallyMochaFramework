@@ -263,7 +263,8 @@ describe("Implementation", () => {
                     console.log("Call to Action : " + CTA);
                     console.log("CTA Value : " + CTAValue);
                     console.log("Reward Activity Id : " + RewardActivityID);
-
+                    browser.back();
+                    action.doClick($("*=" + ImplementationName));
                     if (CTA === "phone") {
                       browser.switchWindow("Rewards");
                       $(
@@ -334,7 +335,7 @@ describe("Implementation", () => {
                       }
                     }
 
-                    // browser.back();
+                    browser.back();
                     action.doClick($("#lookupa0e2R00000DZ7sv00NE0000006KqBV"));
                     action.doWaitForElement(
                       $(rofPage.rewardPlanDesignsHeaderLink)
@@ -424,6 +425,7 @@ describe("Implementation", () => {
                     console.log("Call to Action : " + CTA);
                     console.log("CTA Value : " + CTAValue);
                     console.log("Copy Template : " + chkCopyTemp);
+                    
 
                     if (CTA === "phone") {
                       browser.switchWindow("Rewards");
