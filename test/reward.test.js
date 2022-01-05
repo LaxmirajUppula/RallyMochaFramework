@@ -147,8 +147,12 @@ describe("Implementation", () => {
             } else {
               browser.setTimeout({ implicit: 2000 });
               let home = $("#CF00NE0000006Km0h_ilecell a").isExisting();
+              let home1 = $("div[class='ptBreadcrumb'] a").isExisting();
               if(home){
                 $("#CF00NE0000006Km0h_ilecell a").click();
+              }
+              if(home1){
+                $("div[class='ptBreadcrumb'] a").click();
               }
               action.doWaitForElement($(rofPage.rewardPlanDesignsHeaderLink));
               action.doClick($(rofPage.rewardPlanDesignsHeaderLink));
@@ -195,6 +199,12 @@ describe("Implementation", () => {
                 "Total Activities present in Reward Plan : " + Activities.length
               );
               // *********************   UI ********************************************
+              let handles = browser.getWindowHandles();
+              if (handles.length > 1) {
+                browser.switchToWindow(handles[1]);
+                browser.closeWindow();
+                browser.switchToWindow(handles[0]);
+              }
               src.UILogin(clientData.BSLogout, userName, password);
               src.RewardsPage();
               browser.switchWindow(clientData.SFUrl);
@@ -270,6 +280,11 @@ describe("Implementation", () => {
                     console.log("Reward Activity Id : " + RewardActivityID);
                     browser.back();
                     //action.doClick($("*="+ clientName));
+                    browser.switchWindow("Rewards");
+                    if ($("a[data-testid='missing-reward']").isExisting()) {
+                      action.doClick($("a[data-testid='missing-reward']"));
+                    }
+                    browser.takeScreenshot();
                     if (CTA === "phone") {
                       browser.switchWindow("Rewards");
                       $(
@@ -301,6 +316,14 @@ describe("Implementation", () => {
                       browser.takeScreenshot();
                       browser.pause(5000);
                       var valUrl = browser.getUrl().toLowerCase();
+                      browser.url(clientData.BSRewardPage);
+                    } else {
+                      $(
+                        "div[data-testid='" + RewardActivityID + "'] button"
+                      ).click();
+                      browser.takeScreenshot();
+                      browser.pause(5000);
+                      var valUrl = browser.getUrl();
                       browser.url(clientData.BSRewardPage);
                     }
 
@@ -340,7 +363,7 @@ describe("Implementation", () => {
                       }
                     }
 
-                    browser.back();
+                    browser.switchWindow(clientData.SFUrl);
                     //action.doClick($("*="+clientName));
                     action.doWaitForElement(
                       $(rofPage.rewardPlanDesignsHeaderLink)
