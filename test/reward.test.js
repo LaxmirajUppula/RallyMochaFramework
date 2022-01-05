@@ -145,6 +145,11 @@ describe("Implementation", () => {
             ) {
               console.log("No Reward affiliation user");
             } else {
+              browser.setTimeout({ implicit: 2000 });
+              let home = $("#CF00NE0000006Km0h_ilecell a").isExisting();
+              if(home){
+                $("#CF00NE0000006Km0h_ilecell a").click();
+              }
               action.doWaitForElement($(rofPage.rewardPlanDesignsHeaderLink));
               action.doClick($(rofPage.rewardPlanDesignsHeaderLink));
               var url = browser.getUrl();
@@ -222,7 +227,7 @@ describe("Implementation", () => {
                   //*************************************Validating the custom reward Activity id match & capturing values*******************************/
                   if (ActivityName.includes(RewardActivityID)) {
                     console.log("Custom Reward Activity " + RewardActivityID);
-                    action.doClick($("#lookupa0e2R00000DZ7sv00NE0000006Km7x"));
+                    action.doClick($("*="+clientName+""));
                     action.doClick($("*=Custom Reward Activities["));
                     var url = browser.getUrl();
                     var customActivitiesBody = url
@@ -264,7 +269,7 @@ describe("Implementation", () => {
                     console.log("CTA Value : " + CTAValue);
                     console.log("Reward Activity Id : " + RewardActivityID);
                     browser.back();
-                    action.doClick($("*=" + ImplementationName));
+                    //action.doClick($("*="+ clientName));
                     if (CTA === "phone") {
                       browser.switchWindow("Rewards");
                       $(
@@ -336,7 +341,7 @@ describe("Implementation", () => {
                     }
 
                     browser.back();
-                    action.doClick($("#lookupa0e2R00000DZ7sv00NE0000006KqBV"));
+                    //action.doClick($("*="+clientName));
                     action.doWaitForElement(
                       $(rofPage.rewardPlanDesignsHeaderLink)
                     );
@@ -565,6 +570,8 @@ describe("Implementation", () => {
                 }
               }
             }
+            browser.back();
+            //$("#CF00NE0000006Km0h_ilecell a").click();
           }
         }
       });
