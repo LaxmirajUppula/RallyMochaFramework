@@ -237,7 +237,7 @@ describe("Implementation", () => {
                   //*************************************Validating the custom reward Activity id match & capturing values*******************************/
                   if (ActivityName.includes(RewardActivityID)) {
                     console.log("Custom Reward Activity " + RewardActivityID);
-                    action.doClick($("*="+clientName+""));
+                    action.doClick($("#CF00NE0000006Km7x_ilecell a"));
                     action.doClick($("*=Custom Reward Activities["));
                     var url = browser.getUrl();
                     var customActivitiesBody = url
