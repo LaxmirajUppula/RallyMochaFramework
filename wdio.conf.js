@@ -127,7 +127,8 @@ exports.config = {
         args: ['--silent'],
         port: 9595,
         path: "/node_modules/chromedriver/lib/chromedriver/chromedriver",
-        hostname : "localhost"
+        hostname : "localhost",
+        chromedriverCustomPath: "/Users/ulaxmira/Desktop/chromedriver"
     }]
   ],
 

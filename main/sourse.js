@@ -25,8 +25,9 @@ class buildPage {
   ResourcePage() {
     // page.open("https://member.werally.com/home/");
     action.doClick($("#rh-header-company-info-image"))
-    action.doWaitForElement($(homePage.benefit));
-    action.doClick($(homePage.benefit));
+    // action.doWaitForElement($(homePage.benefit));
+    // action.doClick($(homePage.benefit));
+    page.open("https://member.werally.com/resources/")
     action.doWaitForElement($(benefitPage.headline));
   }
 
@@ -42,11 +43,6 @@ class buildPage {
     action.doClick($(supportPage.contactSupportBtn));
   }
 
-  // RewardsPage() {
-  //   page.open("https://member.werally.com/home/");
-  //   action.doWaitForElement($(homePage.reward));
-  //   action.doClick($(homePage.reward));
-  //   action.doWaitForElement(rewardsPage.genericButton);
-  // }
+  
 }
 module.exports = new buildPage();
